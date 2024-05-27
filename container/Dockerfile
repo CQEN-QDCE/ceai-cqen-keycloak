@@ -1,0 +1,90 @@
+# Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
+ARG IMG_VERSION
+ARG ENV
+
+# Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
+FROM registry.access.redhat.com/ubi9 as ubi-micro-build
+# Création d'un système de fichiers racine pour les installations
+RUN mkdir -p /mnt/rootfs
+# Installation de util-linux et curl-minimal dans le système de fichiers racine, sans documentation pour réduire la taille
+RUN dnf install --installroot /mnt/rootfs util-linux curl-minimal --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+    dnf --installroot /mnt/rootfs clean all && \
+    rpm --root /mnt/rootfs -e --nodeps setup
+
+# Seconde étape de construction en utilisant l'image de Keycloak spécifiée
+FROM quay.io/keycloak/keycloak:${IMG_VERSION} as builder
+ARG IMG_VERSION
+ARG ENV
+
+# Copie du système de fichiers racine préparé dans l'étape précédente
+COPY --from=ubi-micro-build /mnt/rootfs /
+
+# Configuration des variables d'environnement pour Keycloak
+ENV KC_HEALTH_ENABLED=true
+ENV KC_METRICS_ENABLED=true
+ENV KC_HTTP_RELATIVE_PATH=/
+ENV KC_PROXY_HEADERS=xforwarded
+ENV KC_DB=postgres
+ENV ENV=${ENV}
+
+
+# Configuration du répertoire de travail pour l'importation des configurations de realm (non utilisé dans migration)
+WORKDIR /tmp/realmconfig
+COPY --chown=1000 realms ./realms
+COPY --chown=1000 ./realmconfig.sh .
+
+# Exécution du script de configuration de realm avec les variables d'environnement passées
+RUN ./realmconfig.sh
+
+# Création d'une liste des fichiers JSON de realm pour importation lors du entrypoint
+RUN ls -m -d ./utils/realm-deploy/realms/*.json | tr -d '[:space:]' > realmfileslist
+
+# Copie des providers personnalisés dans le répertoire des providers de Keycloak (non utilisé dans migration)
+COPY --chown=1000 ./providers/2fa-email-authenticator/target/*.jar /opt/keycloak/providers
+
+# Retour au répertoire de travail de Keycloak
+WORKDIR /opt/keycloak
+
+# Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
+RUN /opt/keycloak/bin/kc.sh build
+
+# Étape finale de création de l'image Keycloak
+FROM quay.io/keycloak/keycloak:${IMG_VERSION} as keycloak
+ARG IMG_VERSION
+ARG ENV
+
+# Copie du système de fichiers racine de l'étape de pré-build
+COPY --from=ubi-micro-build /mnt/rootfs /
+
+# Copie de l'ensemble du répertoire de Keycloak depuis l'étape de construction
+COPY --from=builder /opt/keycloak/ /opt/keycloak/
+
+# Copie des realms importés et d'autres configurations dans le répertoire de données de Keycloak (non utilisé dans migration)
+COPY --from=builder /tmp/realmconfig/realms /opt/keycloak/data/import
+
+# Copie des fichiers de thème personnalisés
+COPY --chown=1000 ./themes/cqen /opt/keycloak/themes/cqen
+
+# Copie des listes noires de mots de passe
+COPY --chown=1000 ./utils/password-blacklists /opt/keycloak/data/password-blacklists
+
+# Copier le script de vérification et de copie
+COPY --chown=1000 ./check_and_copy.sh /tmp/check_and_copy.sh
+
+# Passer à l'utilisateur root pour changer les permissions
+USER root
+
+# Rendre le script exécutable et exécuter le script de vérification et de copie
+RUN chmod +x /tmp/check_and_copy.sh
+
+# Copier le script de point d'entrée
+COPY --chown=1000 ./entrypoint.sh /opt/keycloak/entrypoint.sh
+
+# Rendre le script de point d'entrée exécutable
+RUN chmod +x /opt/keycloak/entrypoint.sh
+
+# Revenir à l'utilisateur par défaut (1000 dans ce cas)
+USER 1000
+
+# Définir le point d'entrée
+ENTRYPOINT ["/opt/keycloak/entrypoint.sh"]

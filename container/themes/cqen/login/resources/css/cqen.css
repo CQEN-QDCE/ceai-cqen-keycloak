@@ -1,0 +1,23 @@
+.login-pf body {
+    background: #efefef;
+    min-height: 100vh;
+}
+
+.login-pf-page {
+    background: #095797;
+    padding-bottom: 40px;
+    min-height: 91vh;
+}
+
+.login-pf .page-footer {
+    background: #ffffff;
+}
+
+.input-access-code {
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.email-title {
+    color: #223654;
+}
