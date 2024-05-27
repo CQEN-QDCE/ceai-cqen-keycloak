@@ -22,6 +22,8 @@ COPY --from=ubi-micro-build /mnt/rootfs /
 ENV KC_METRICS_ENABLED=true
 ENV KC_HEALTH_ENABLED=true
 ENV KC_HTTP_RELATIVE_PATH=/
+ENV KC_PROXY_HEADERS=xforwarded
+ENV KC_DB=postgres
 
 # Configuration du répertoire de travail pour l'importation des configurations de realm
 WORKDIR /tmp/realmconfig
@@ -57,7 +59,7 @@ COPY --from=builder /opt/keycloak/ /opt/keycloak/
 COPY --from=builder /tmp/realmconfig/realms /opt/keycloak/data/import
 
 # Copie des fichiers de thème personnalisés
-COPY --chown=1000 ./customization/themes/cqen /opt/keycloak/themes/cqen
+COPY --chown=1000 ./themes/cqen /opt/keycloak/themes/cqen
 
 # Copie des listes noires de mots de passe
 COPY --chown=1000 ./password-blacklists /opt/keycloak/data/password-blacklists
