@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      # Change the number before : to the port the web interface should be accessible on
+      - '3000:80'
+      # Change the number before : to the port the SMTP server should be accessible on
+      - '25:25'
+      # Change the number before : to the port the IMAP server should be accessible on
+      - '143:143'
+    environment:
+      #Specifies the server hostname. Used in auto-generated TLS certificate if enabled.
+      - ServerOptions__HostName=${SERVER_OPTIONS__HOSTNAME}
+  postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+        - 5432:5432 
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  keycloak:
+      build:
+        context: .
+        # Spécifier la version de l'image keycloak 
+        # Ce valeur peut changer pour des tests par exemple
+        # Mais, normalement, ça devrait être au minimum in sync avec la version dans le fichier version-to-deploy.json
+        args:
+          - IMG_VERSION=${IMG_VERSION}
+          - ENV=${ENV}
+      environment:
+        KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+        KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+        KC_DB: ${KC_DB}
+        KC_DB_URL: ${KC_DB_URL}
+        KC_HOSTNAME: ${KC_HOSTNAME}
+        KC_DB_USERNAME: ${KC_DB_USERNAME}
+        KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+        ENV: ${ENV}
+
+      ports:
+        - 8080:8080
+      depends_on:
+        - smtp4dev
+        - postgres
+      volumes:
+        - ./customization/themes/cqen/:/opt/keycloak/themes/cqen/
