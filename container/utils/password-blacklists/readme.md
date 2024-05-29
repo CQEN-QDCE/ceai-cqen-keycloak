@@ -1,1 +1,0 @@
-List maintained by github.com/w0lf-d3n/Quebec_Wordlist
