@@ -1,6 +1,6 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION
-ARG ENV
+ARG IMG_VERSION=24.0.4
+ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
 FROM registry.access.redhat.com/ubi9 as ubi-micro-build
@@ -36,9 +36,6 @@ COPY --chown=1000 container/realmconfig.sh .
 # Exécution du script de configuration de realm avec les variables d'environnement passées
 RUN ./realmconfig.sh
 
-# Création d'une liste des fichiers JSON de realm pour importation lors du entrypoint
-RUN ls -m -d ./utils/realm-deploy/realms/*.json | tr -d '[:space:]' > realmfileslist
-
 # Copie des providers personnalisés dans le répertoire des providers de Keycloak (non utilisé dans migration)
 COPY --chown=1000 providers/2fa-email-authenticator/target/*.jar /opt/keycloak/providers
 
@@ -68,23 +65,8 @@ COPY --chown=1000 ./themes/cqen /opt/keycloak/themes/cqen
 # Copie des listes noires de mots de passe
 COPY --chown=1000 ./utils/password-blacklists /opt/keycloak/data/password-blacklists
 
-# Copier le script de vérification et de copie
-COPY --chown=1000 container/check_and_copy.sh /tmp/check_and_copy.sh
-
-# Passer à l'utilisateur root pour changer les permissions
-USER root
-
-# Rendre le script exécutable et exécuter le script de vérification et de copie
-RUN chmod +x /tmp/check_and_copy.sh
-
 # Copier le script de point d'entrée
 COPY --chown=1000 container/entrypoint.sh /opt/keycloak/entrypoint.sh
-
-# Rendre le script de point d'entrée exécutable
-RUN chmod +x /opt/keycloak/entrypoint.sh
-
-# Revenir à l'utilisateur par défaut (1000 dans ce cas)
-USER 1000
 
 # Définir le point d'entrée
 ENTRYPOINT ["/opt/keycloak/entrypoint.sh"]

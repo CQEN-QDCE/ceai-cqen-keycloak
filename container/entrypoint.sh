@@ -13,8 +13,6 @@ elif [ "$ENV" = "prod" ]; then
   exec /opt/keycloak/bin/kc.sh start --spi-connections-jpa-quarkus-migration-strategy=update -Dkeycloak.password.blacklists.path=/opt/keycloak/data/password-blacklists --import-realm --optimized
 elif [ "$ENV" = "upgrade" ]; then
   exec /opt/keycloak/bin/kc.sh start --spi-connections-jpa-quarkus-migration-strategy=update -Dkeycloak.password.blacklists.path=/opt/keycloak/data/password-blacklists --optimized
-elif [ "$ENV" = "migration" ]; then
-  exec /opt/keycloak/bin/kc.sh start --spi-connections-jpa-quarkus-migration-strategy=update -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/tmp/import -Dkeycloak.password.blacklists.path=/opt/keycloak/data/password-blacklists --optimized
 else
   echo "Environnement inconnu: $ENV"
   exit 1
