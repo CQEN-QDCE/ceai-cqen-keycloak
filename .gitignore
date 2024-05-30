@@ -93,8 +93,5 @@ go.sum
 *.crt
 *.key
 
-# Text files must be markdown format
-*.txt
-
 # files for local development
 .env
