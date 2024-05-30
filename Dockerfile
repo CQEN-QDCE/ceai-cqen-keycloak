@@ -1,7 +1,6 @@
-# Ce fichier doit être utilisé lors d'une mise à jours de version de Keycloak, sur une installation existante.
-
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
 ARG IMG_VERSION=24.0.4
+ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
 FROM registry.access.redhat.com/ubi9 as ubi-micro-build
@@ -15,6 +14,7 @@ RUN dnf install --installroot /mnt/rootfs util-linux curl-minimal --releasever 9
 # Seconde étape de construction en utilisant l'image de Keycloak spécifiée
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} as builder
 ARG IMG_VERSION
+ARG ENV
 
 # Copie du système de fichiers racine préparé dans l'étape précédente
 COPY --from=ubi-micro-build /mnt/rootfs /
@@ -25,9 +25,19 @@ ENV KC_METRICS_ENABLED=true
 ENV KC_HTTP_RELATIVE_PATH=/
 ENV KC_PROXY_HEADERS=xforwarded
 ENV KC_DB=postgres
+ENV ENV=${ENV}
 
-# Copie des providers personnalisés dans le répertoire des providers de Keycloak
-COPY --chown=1000 ./providers/2fa-email-authenticator/target/*.jar /opt/keycloak/providers
+
+# Configuration du répertoire de travail pour l'importation des configurations de realm (non utilisé dans migration)
+WORKDIR /tmp/realmconfig
+COPY --chown=1000 container/realms ./realms
+COPY --chown=1000 container/realmconfig.sh .
+
+# Exécution du script de configuration de realm avec les variables d'environnement passées
+RUN ./realmconfig.sh
+
+# Copie des providers personnalisés dans le répertoire des providers de Keycloak (non utilisé dans migration)
+COPY --chown=1000 providers/2fa-email-authenticator/target/*.jar /opt/keycloak/providers
 
 # Retour au répertoire de travail de Keycloak
 WORKDIR /opt/keycloak
@@ -38,6 +48,7 @@ RUN /opt/keycloak/bin/kc.sh build
 # Étape finale de création de l'image Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} as keycloak
 ARG IMG_VERSION
+ARG ENV
 
 # Copie du système de fichiers racine de l'étape de pré-build
 COPY --from=ubi-micro-build /mnt/rootfs /
@@ -45,10 +56,17 @@ COPY --from=ubi-micro-build /mnt/rootfs /
 # Copie de l'ensemble du répertoire de Keycloak depuis l'étape de construction
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
+# Copie des realms importés et d'autres configurations dans le répertoire de données de Keycloak (non utilisé dans migration)
+COPY --from=builder /tmp/realmconfig/realms /opt/keycloak/data/import
+
 # Copie des fichiers de thème personnalisés
-COPY --chown=1000 ./customization/themes/cqen /opt/keycloak/themes/cqen
+COPY --chown=1000 ./themes/cqen /opt/keycloak/themes/cqen
 
 # Copie des listes noires de mots de passe
-COPY --chown=1000 ./password-blacklists /opt/keycloak/data/password-blacklists
+COPY --chown=1000 ./utils/password-blacklists /opt/keycloak/data/password-blacklists
 
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--spi-connections-jpa-quarkus-migration-strategy=update", "-Dkeycloak.password.blacklists.path=/opt/keycloak/data/password-blacklists", "--optimized"]
+# Copier le script de point d'entrée
+COPY --chown=1000 container/entrypoint.sh /opt/keycloak/entrypoint.sh
+
+# Définir le point d'entrée
+ENTRYPOINT ["/opt/keycloak/entrypoint.sh"]

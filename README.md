@@ -27,6 +27,29 @@ Thèmes personnalisés pour l'interface utilisateur de Keycloak.
 ### [Utilitaires](./utils/)
 Utilitaires pour supporter certaines fonctionnalités.
 
+### Construction d'une image
+
+1. Obtenir la dernière version git (git clone ou git pull).
+
+```
+git clone https://github.com/CQEN-QDCE/ceai-cqen-keycloak.git
+```
+1. Obtenir l'image keycloak en dev.
+
+```
+docker build -t keycloak_image:dev --build-arg ENV=dev .
+```
+1. Obtenir l'image keycloak en prod.
+
+```
+docker build -t keycloak_image:prod --build-arg ENV=prod .
+```
+1. Obtenir l'image keycloak upgrade.
+
+```
+docker build -t keycloak_image:upgrade .
+```
+
 ## License
 
 Le code contenu dans ce dépôt est sous la Licence Apache 2.0 sauf si mention contraire.
