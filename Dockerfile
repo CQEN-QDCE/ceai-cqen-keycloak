@@ -11,7 +11,16 @@ RUN dnf install --installroot /mnt/rootfs util-linux curl-minimal --releasever 9
     dnf --installroot /mnt/rootfs clean all && \
     rpm --root /mnt/rootfs -e --nodeps setup
 
-# Seconde étape de construction en utilisant l'image de Keycloak spécifiée
+# Construction des modules de Keycloak
+FROM docker.io/maven:3-amazoncorretto-17 as providers-builder
+
+COPY ./providers ./providers
+
+# Construction du module 2fa-email-authenticator
+RUN mvn -f ./providers/2fa-email-authenticator/pom.xml clean package
+# Ajouter les nouveaux modules ici
+
+# Construction optimisée de l'exécutable Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} as builder
 ARG IMG_VERSION
 ARG ENV
@@ -37,7 +46,7 @@ COPY --chown=1000 container/realmconfig.sh .
 RUN ./realmconfig.sh
 
 # Copie des providers personnalisés dans le répertoire des providers de Keycloak (non utilisé dans migration)
-COPY --chown=1000 providers/2fa-email-authenticator/target/*.jar /opt/keycloak/providers
+COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/target/*.jar /opt/keycloak/providers
 
 # Retour au répertoire de travail de Keycloak
 WORKDIR /opt/keycloak

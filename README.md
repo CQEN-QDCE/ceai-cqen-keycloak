@@ -16,7 +16,7 @@ Répertoire d'utilitaires pour faciliter le déploiement et l'utilisation de Key
 Dockerfile et script docker-compose pour déployer Keycloak avec les utilitaires du dépôt.
 
 ### [*Providers*](./providers/)
-Modules personnalisé qui ajoutent des fonctionalités à Keycloak.
+Modules personnalisé qui ajoutent des fonctionnalités à Keycloak.
 
 ### [Scripts](./scripts/)
 Scripts d'automatisation et de tests pour interagir avec l'API d'administration de Keycloak.
@@ -27,7 +27,7 @@ Thèmes personnalisés pour l'interface utilisateur de Keycloak.
 ### [Utilitaires](./utils/)
 Utilitaires pour supporter certaines fonctionnalités.
 
-### Construction d'une image
+## Construction d'une image
 
 1. Obtenir la dernière version git (git clone ou git pull).
 
