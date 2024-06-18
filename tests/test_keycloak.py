@@ -120,7 +120,7 @@ def test_realm_import():
     assert realm_data['realm'] == REALM_NAME_IMPORT, f"Expected realm name '{REALM_NAME_IMPORT}', got '{realm_data['realm']}'"
     assert realm_data['enabled'] is True, "Expected realm to be enabled"
     refresh_token = refresh_access_token(BASE_URL, REALM_NAME, client_id, client_secret, REFRESH_TOKEN)
-    delete_client(BASE_URL, REALM_NAME, client_id, refresh_token)
+    # delete_client(BASE_URL, REALM_NAME, client_id, refresh_token)
 
 
 def test_password_policy():
