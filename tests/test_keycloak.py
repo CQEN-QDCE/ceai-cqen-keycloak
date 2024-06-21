@@ -93,19 +93,6 @@ def create_client(base_url, realm_name, client_id):
 
     return client_id, client_secret
 
-def delete_client(base_url, realm_name, client_id, access_token):
-    url = f'{base_url}/admin/realms/{realm_name}/clients/{client_id}'
-    # client_token = get_client_acces_token(base_url, realm_name, client_id, client_secret, USERNAME, PASSWORD)
-    headers = {
-        'Authorization': f'Bearer {access_token}'
-    }
-    response = requests.delete(url, headers=headers)
-    response.raise_for_status()
-
-
-# client_id, client_secret = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID)
-# CLIENT_TOKEN = get_client_acces_token(BASE_URL, REALM_NAME, client_id, client_secret, USERNAME, PASSWORD)
-
 
 def test_realm_import():
     client_id, client_secret = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID1)
@@ -119,8 +106,6 @@ def test_realm_import():
     realm_data = response.json()
     assert realm_data['realm'] == REALM_NAME_IMPORT, f"Expected realm name '{REALM_NAME_IMPORT}', got '{realm_data['realm']}'"
     assert realm_data['enabled'] is True, "Expected realm to be enabled"
-    refresh_token = refresh_access_token(BASE_URL, REALM_NAME, client_id, client_secret, REFRESH_TOKEN)
-    # delete_client(BASE_URL, REALM_NAME, client_id, refresh_token)
 
 
 def test_password_policy():
