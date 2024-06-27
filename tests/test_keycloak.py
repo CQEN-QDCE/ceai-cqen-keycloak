@@ -6,10 +6,8 @@ import re
 BASE_URL = 'http://localhost:8080'
 REALM_NAME = 'master'
 REALM_NAME_IMPORT = 'ceai'
-# ggignore
 REALM_NAME_PASSWORD = 'ceai'
 USERNAME = 'admin'
-# ggignore
 PASSWORD = 'cqen'
 EXPECTED_LOGIN_THEME = 'cqen'
 EXPECTED_EMAIL_THEME = 'cqen'
