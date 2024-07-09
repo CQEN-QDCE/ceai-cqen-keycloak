@@ -13,13 +13,6 @@ EXPECTED_LOGIN_THEME = 'cqen'
 EXPECTED_EMAIL_THEME = 'cqen'
 EXPECTED_ACCOUNT_THEME = 'cqen'
 ADMIN_CLIENT_ID = 'admin-cli'
-NEW_CLIENT_ID1 = 'test-client1'
-NEW_CLIENT_ID2 = 'test-client2'
-NEW_CLIENT_ID3 = 'test-client3'
-NEW_CLIENT_ID4 = 'test-client4'
-NEW_CLIENT_ID5 = 'test-client5'
-NEW_CLIENT_ID6 = 'test-client6'
-NEW_CLIENT_ID7 = 'test-client7'
 
 
 def get_admin_token(base_url, realm_name, client_id, username, password):
@@ -97,6 +90,7 @@ def create_client(base_url, realm_name, client_id):
 
 
 def test_realm_import():
+    NEW_CLIENT_ID1 = 'test-client1'
     client_id, client_secret = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID1)
     CLIENT_TOKEN, REFRESH_TOKEN = get_access_token_with_refresh(BASE_URL, REALM_NAME, client_id, client_secret, USERNAME, PASSWORD)
     url = f"{BASE_URL}/admin/realms/{REALM_NAME_IMPORT}"
@@ -111,6 +105,7 @@ def test_realm_import():
 
 
 def test_password_policy():
+    NEW_CLIENT_ID2 = 'test-client2'
     client_id2, client_secret2 = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID2)
     CLIENT_TOKEN, REFRESH_TOKEK = get_access_token_with_refresh(BASE_URL, REALM_NAME, client_id2, client_secret2, USERNAME, PASSWORD)
     url = f'{BASE_URL}/admin/realms/{REALM_NAME_PASSWORD}/users'
@@ -133,6 +128,7 @@ def test_password_policy():
 
 
 def test_login_theme_import():
+    NEW_CLIENT_ID3 = 'test-client3'
     client_id, client_secret = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID3)
     CLIENT_TOKEN, REFRESH_TOKEN = get_access_token_with_refresh(BASE_URL, REALM_NAME, client_id, client_secret, USERNAME, PASSWORD)
     url = f'{BASE_URL}/admin/realms/{REALM_NAME_IMPORT}'
@@ -148,6 +144,7 @@ def test_login_theme_import():
 
 
 def test_account_theme_import():
+    NEW_CLIENT_ID4 = 'test-client4'
     client_id, client_secret = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID4)
     CLIENT_TOKEN, REFREH_TOKEN = get_access_token_with_refresh(BASE_URL, REALM_NAME, client_id, client_secret, USERNAME, PASSWORD)
     url = f'{BASE_URL}/admin/realms/{REALM_NAME_IMPORT}'
@@ -163,6 +160,7 @@ def test_account_theme_import():
 
 
 def test_email_theme_import():
+    NEW_CLIENT_ID5 = 'test-client5'
     client_id, client_secret = create_client(BASE_URL, REALM_NAME, NEW_CLIENT_ID5)
     CLIENT_TOKEN, REFREH_TOKEN = get_access_token_with_refresh(BASE_URL, REALM_NAME, client_id, client_secret, USERNAME, PASSWORD)
     url = f'{BASE_URL}/admin/realms/{REALM_NAME_IMPORT}'
