@@ -42,6 +42,11 @@ services:
         KC_DB_USERNAME: ${KC_DB_USERNAME}
         KC_DB_PASSWORD: ${KC_DB_PASSWORD}
         ENV: ${ENV}
+        KC_LEGACY_OBSERVABILITY_INTERFACE: true
+        KC_METRICS_ENABLED: true
+        KC_HEALTH_ENABLED: true
+        KC_PROXY_HEADERS: forwarded
+
 
       ports:
         - 8080:8080

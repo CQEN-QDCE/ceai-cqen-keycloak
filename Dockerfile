@@ -1,5 +1,5 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION=24.0.4
+ARG IMG_VERSION=25.0.1
 ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
@@ -32,9 +32,11 @@ COPY --from=ubi-micro-build /mnt/rootfs /
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 ENV KC_HTTP_RELATIVE_PATH=/
-ENV KC_PROXY_HEADERS=xforwarded
+ENV KC_PROXY_HEADERS=forwarded
 ENV KC_DB=postgres
 ENV ENV=${ENV}
+ENV KC_HTTP_MANAGEMENT_RELATIVE_PATH=/
+ENV KC_LEGACY_OBSERVABILITY_INTERFACE=true
 
 
 # Configuration du répertoire de travail pour l'importation des configurations de realm (non utilisé dans migration)
@@ -52,7 +54,7 @@ COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/tar
 WORKDIR /opt/keycloak
 
 # Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
-RUN /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true
 
 # Étape finale de création de l'image Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} as keycloak
