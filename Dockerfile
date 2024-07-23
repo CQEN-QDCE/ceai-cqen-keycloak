@@ -36,7 +36,7 @@ ENV KC_PROXY_HEADERS=forwarded
 ENV KC_DB=postgres
 ENV ENV=${ENV}
 ENV KC_HTTP_MANAGEMENT_RELATIVE_PATH=/
-ENV KC_LEGACY_OBSERVABILITY_INTERFACE=true
+ENV KC_LEGACY_OBSERVABILITY_INTERFACE=false
 
 
 # Configuration du répertoire de travail pour l'importation des configurations de realm (non utilisé dans migration)
