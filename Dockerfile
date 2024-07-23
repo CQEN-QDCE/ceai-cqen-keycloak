@@ -37,6 +37,7 @@ ENV KC_DB=postgres
 ENV ENV=${ENV}
 ENV KC_HTTP_MANAGEMENT_RELATIVE_PATH=/
 ENV KC_LEGACY_OBSERVABILITY_INTERFACE=false
+ENV KC_HTTP_MANAGEMENT_PORT=9000
 
 
 # Configuration du répertoire de travail pour l'importation des configurations de realm (non utilisé dans migration)
