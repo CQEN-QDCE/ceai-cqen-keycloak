@@ -34,21 +34,27 @@ Utilitaires pour supporter certaines fonctionnalités.
 ```
 git clone https://github.com/CQEN-QDCE/ceai-cqen-keycloak.git
 ```
-1. Obtenir l'image keycloak en dev.
+2. Obtenir l'image keycloak en dev.
 
 ```
 docker build -t keycloak_image:dev --build-arg ENV=dev .
 ```
-1. Obtenir l'image keycloak en prod.
+3. Obtenir l'image keycloak en prod.
 
 ```
 docker build -t keycloak_image:prod --build-arg ENV=prod .
 ```
-1. Obtenir l'image keycloak upgrade.
+4. Obtenir l'image keycloak upgrade.
 
 ```
 docker build -t keycloak_image:upgrade .
 ```
+
+## NB:
+
+A partir de keycloak version 25, si nous ne souhaitons pas utiliser le port de gestion  9000, nous devons ajouter dans le Dockerfile la variable d'environnement KC_LEGACY_OBSERVABILITY_INTERFACE=true.
+
+Si par contre nous souhaitons pas utiliser le port de gestion 9000, nous devons enlever du Dockerfile la variable d'environnement KC_LEGACY_OBSERVABILITY_INTERFACE ou la mettre a false, nous devous également ajouter dans le Dockerfile les variables d'environnement KC_HTTP_MANAGEMENT_PORT=9000 et KC_HTTP_MANAGEMENT_RELATIVE_PATH=/ puis ajuster le docker-compose.
 
 ## License
 
