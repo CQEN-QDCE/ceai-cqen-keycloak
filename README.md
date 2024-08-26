@@ -71,12 +71,6 @@ docker build -t keycloak_image:upgrade .
 | `KC_HTTP_MANAGEMENT_RELATIVE_PATH` | Le chemin relatif pour la diffusion des ressources à partir de l'interface de gestion.
 
 
-## NB:
-
-A partir de keycloak version 25, si nous ne souhaitons pas utiliser le port de gestion  9000, nous devons ajouter dans le Dockerfile la variable d'environnement KC_LEGACY_OBSERVABILITY_INTERFACE=true.
-
-Si par contre nous souhaitons pas utiliser le port de gestion 9000, nous devons enlever du Dockerfile la variable d'environnement KC_LEGACY_OBSERVABILITY_INTERFACE ou la mettre a false, nous devous également ajouter dans le Dockerfile les variables d'environnement KC_HTTP_MANAGEMENT_PORT=9000 et KC_HTTP_MANAGEMENT_RELATIVE_PATH=/ puis ajuster le docker-compose.
-
 ## License
 
 Le code contenu dans ce dépôt est sous la Licence Apache 2.0 sauf si mention contraire.
