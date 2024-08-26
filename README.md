@@ -50,6 +50,27 @@ docker build -t keycloak_image:prod --build-arg ENV=prod .
 docker build -t keycloak_image:upgrade .
 ```
 
+## Variables d'environnement
+
+| Nom                           | Description                                                   |
+| ----------------------------  | ------------------------------------------------------------- |
+| `KEYCLOAK_ADMIN`              | Nom d'utilisateur administrateur initial                                 |
+| `KEYCLOAK_ADMIN_PASSWORD`     | Mot de passe administrateur initial
+| `KC_DB`                       | Le fournisseur de base de données..
+| `KC_DB_URL`                   | L'URL JDBC complète de la base de données.
+| `KC_HOSTNAME`                 | Adresse à laquelle le serveur est exposé.
+| `KC_HTTP_RELATIVE_PATH`       | le chemin relatif aux ressources à servir. Le chemin doit commencer par un /.
+| `KC_DB_USERNAME`              | Le nom d'utilisateur de l'utilisateur de la base de données. 
+| `KC_DB_PASSWORD`              | Le mot de passe de l'utilisateur de la base de données.
+| `KC_METRICS_ENABLED`          | Si le serveur doit exposer des métriques.
+| `KC_HEALTH_ENABLED`           | Si le serveur doit exposer des points de terminaison de contrôle de santé.
+| `KC_PROXY_HEADERS`            | Les en-têtes proxy qui doivent être acceptés par le serveur.
+| `KC_HTTP_MANAGEMENT_PORT`     | Port de l'interface de gestion.
+| `KC_HTTP_ENABLED`             | Active l'écouteur HTTP.
+| `KC_FEATURES`                 | Active un ensemble d'une ou plusieurs fonctionnalités.
+| `KC_HTTP_MANAGEMENT_RELATIVE_PATH` | Le chemin relatif pour la diffusion des ressources à partir de l'interface de gestion.
+
+
 ## NB:
 
 A partir de keycloak version 25, si nous ne souhaitons pas utiliser le port de gestion  9000, nous devons ajouter dans le Dockerfile la variable d'environnement KC_LEGACY_OBSERVABILITY_INTERFACE=true.
