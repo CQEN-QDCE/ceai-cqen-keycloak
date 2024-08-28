@@ -1,5 +1,5 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION=24.0.4
+ARG IMG_VERSION=25.0.2
 ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
@@ -29,10 +29,6 @@ ARG ENV
 COPY --from=ubi-micro-build /mnt/rootfs /
 
 # Configuration des variables d'environnement pour Keycloak
-ENV KC_HEALTH_ENABLED=true
-ENV KC_METRICS_ENABLED=true
-ENV KC_HTTP_RELATIVE_PATH=/
-ENV KC_PROXY_HEADERS=xforwarded
 ENV KC_DB=postgres
 ENV ENV=${ENV}
 
@@ -52,7 +48,7 @@ COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/tar
 WORKDIR /opt/keycloak
 
 # Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
-RUN /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true
 
 # Étape finale de création de l'image Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} as keycloak
