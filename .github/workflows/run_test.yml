@@ -17,6 +17,8 @@ env:
   HOMEPAGE_URL: http://localhost:8080
   TIMEOUT: 60
   INTERVAL: 5
+  KEYCLOAK_ADMIN: admin
+  KEYCLOAK_ADMIN_PASSWORD: cqen
   POSTGRES_DB: keycloak
   POSTGRES_USER: keycloak
   KC_DB: postgres
