@@ -77,7 +77,7 @@ jobs:
 
     - name: Stop and remove Docker containers
       if: always()
-      run: docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE down
+      run: docker-compose -f $DOCKER_COMPOSE_FILE down
 
     - name: Cleanup copied files
       if: always()
