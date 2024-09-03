@@ -17,11 +17,23 @@ env:
   HOMEPAGE_URL: http://localhost:8080
   TIMEOUT: 60
   INTERVAL: 5
+  POSTGRES_DB: keycloak
+  POSTGRES_USER: keycloak
+  KC_DB: postgres
+  KC_DB_URL: jdbc:postgresql://postgres/keycloak
+  KC_HOSTNAME: localhost
+  KC_FEATURES: hostname:v2
+  KC_HTTP_RELATIVE_PATH: /
+  KC_METRICS_ENABLED: true
+  KC_HEALTH_ENABLED: true
+  KC_PROXY_HEADERS: forwarded
+  KC_HTTP_MANAGEMENT_PORT: 9000
+  IMG_VERSION: 25.0.2
+  ENV: dev
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -31,9 +43,6 @@ jobs:
 
     - name: Copy realm template file
       run: cp tests/${{ env.REALM_TEMPLATE_FILE }} container/realms/
-
-    - name: Copy environment file
-      run: cp tests/.env .
 
     - name: Build and start containers
       run: |
@@ -68,5 +77,4 @@ jobs:
     - name: Cleanup copied files
       if: always()
       run: |
-        rm .env
         rm container/realms/${{ env.REALM_TEMPLATE_FILE }}
