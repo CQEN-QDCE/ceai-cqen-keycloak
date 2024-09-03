@@ -1,0 +1,72 @@
+name: CI for Keycloak with Docker
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+  pull_request:
+    branches:
+      - main
+      - 'feature/*'
+
+env:
+  DOCKER_COMPOSE_FILE: docker-compose-dev.yml
+  DOCKER_IMAGE_NAME: ceai-cqen-keycloak:latest
+  REALM_TEMPLATE_FILE: ceai-realm.template.json
+  HOMEPAGE_URL: http://localhost:8080
+  TIMEOUT: 60
+  INTERVAL: 5
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v1
+
+    - name: Copy realm template file
+      run: cp tests/${{ env.REALM_TEMPLATE_FILE }} container/realms/
+
+    - name: Copy environment file
+      run: cp tests/.env .
+
+    - name: Build and start containers
+      run: |
+        docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE build
+        docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE up -d
+
+    - name: Wait for Keycloak to start
+      run: |
+        elapsed=0
+        while true; do
+          HTTP_CODE=$(curl -s -L -o /dev/null -w '%{http_code}' $HOMEPAGE_URL)
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "Keycloak is ready! (HTTP code: $HTTP_CODE)"
+            break
+          fi
+          if [ $elapsed -ge $TIMEOUT ]; then
+            echo "Keycloak did not become available within $TIMEOUT seconds. Exiting... (last HTTP code: $HTTP_CODE)"
+            exit 1
+          fi
+          echo "Waiting for Keycloak to be available... (HTTP code: $HTTP_CODE)"
+          sleep $INTERVAL
+          elapsed=$((elapsed + INTERVAL))
+        done
+
+    - name: Run tests
+      run: python3 tests/test_keycloak.py
+
+    - name: Stop and remove Docker containers
+      if: always()
+      run: docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE down
+
+    - name: Cleanup copied files
+      if: always()
+      run: |
+        rm .env
+        rm container/realms/${{ env.REALM_TEMPLATE_FILE }}
