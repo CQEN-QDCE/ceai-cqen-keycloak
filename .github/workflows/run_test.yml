@@ -51,8 +51,8 @@ jobs:
 
     - name: Build and start containers
       run: |
-        docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE build
-        docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE up -d
+        docker-compose -f $DOCKER_COMPOSE_FILE build
+        docker-compose -f $DOCKER_COMPOSE_FILE up -d
 
     - name: Wait for Keycloak to start
       run: |
