@@ -1,5 +1,5 @@
 HOMEPAGE_URL=${HOMEPAGE_URL:-http://localhost:8080}
-TIMEOUT=${TIMEOUT:-60}  # Temps maximum d'attente en secondes
+TIMEOUT=${TIMEOUT:-120}  # Temps maximum d'attente en secondes
 INTERVAL=${INTERVAL:-5}  # Intervalle entre les vérifications en secondes
 
 # Initialiser le compteur de temps
