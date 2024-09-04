@@ -128,6 +128,12 @@ jobs:
         echo "KC_HTTP_MANAGEMENT_PORT=9000" >> .env
         echo "IMG_VERSION=25.0.2" >> .env
 
+    - name: Load environment variables and run script
+      run: |
+        set -a
+        source .env
+        set +a
+
     - name: Build and run the script
       run: |
         chmod +x ./run_tests.sh
