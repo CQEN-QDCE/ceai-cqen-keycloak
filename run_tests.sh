@@ -23,7 +23,7 @@ run_command() {
 run_command cp tests/$REALM_TEMPLATE_FILE container/realms/
 
 # Copier le fichier .env dans le répertoire courant
-run_command cp tests/.env .
+# run_command cp tests/.env .
 
 # Construire et démarrer les conteneurs Docker avec les variables d'environnement
 run_command docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE build
