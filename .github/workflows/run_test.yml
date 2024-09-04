@@ -136,6 +136,15 @@ jobs:
         source .env
         set +a
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  
+
+    - name: Install dependencies
+      run: |
+        pip install pytest  
+
     - name: Build and run the script
       run: |
         chmod +x ./run_tests.sh
