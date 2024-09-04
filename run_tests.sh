@@ -4,7 +4,7 @@
 DOCKER_COMPOSE_FILE="docker-compose-dev.yml"
 REALM_TEMPLATE_FILE="ceai-realm.template.json"
 HOMEPAGE_URL=${HOMEPAGE_URL:-http://localhost:8080}
-TIMEOUT=${TIMEOUT:-60}  # Temps maximum d'attente en secondes
+TIMEOUT=${TIMEOUT:-120}  # Temps maximum d'attente en secondes
 INTERVAL=${INTERVAL:-5}  # Intervalle entre les vérifications en secondes
 
 # Fonction pour exécuter une commande et vérifier le code de retour
