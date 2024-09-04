@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 HOMEPAGE_URL=${HOMEPAGE_URL:-http://localhost:8080}
 TIMEOUT=${TIMEOUT:-120}  # Temps maximum d'attente en secondes
 INTERVAL=${INTERVAL:-5}  # Intervalle entre les vérifications en secondes
