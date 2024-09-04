@@ -127,6 +127,8 @@ jobs:
         echo "KC_PROXY_HEADERS=forwarded" >> .env
         echo "KC_HTTP_MANAGEMENT_PORT=9000" >> .env
         echo "IMG_VERSION=25.0.2" >> .env
+        echo "ENV=dev" >> .env
+
 
     - name: Load environment variables and run script
       run: |
