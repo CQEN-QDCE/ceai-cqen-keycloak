@@ -49,11 +49,11 @@ jobs:
         echo "ENV=dev" >> .env
 
 
-    - name: Load environment variables and run script
-      run: |
-        set -a
-        source .env
-        set +a
+    # - name: Load environment variables and run script
+    #   run: |
+    #     set -a
+    #     source .env
+    #     set +a
 
     - name: Set up Python
       uses: actions/setup-python@v2
