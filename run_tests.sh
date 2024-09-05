@@ -2,7 +2,6 @@
 
 # Variables
 DOCKER_COMPOSE_FILE="docker-compose-dev.yml"
-DOCKER_IMAGE_NAME="ceai-cqen-keycloak:latest"
 REALM_TEMPLATE_FILE="ceai-realm.template.json"
 HOMEPAGE_URL=${HOMEPAGE_URL:-http://localhost:8080}
 TIMEOUT=${TIMEOUT:-60}  # Temps maximum d'attente en secondes
@@ -23,7 +22,7 @@ run_command() {
 run_command cp tests/$REALM_TEMPLATE_FILE container/realms/
 
 # Copier le fichier .env dans le répertoire courant
-run_command cp tests/.env .
+# run_command cp tests/.env .
 
 # Construire et démarrer les conteneurs Docker avec les variables d'environnement
 run_command docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE build
