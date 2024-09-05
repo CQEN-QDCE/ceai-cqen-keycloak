@@ -48,13 +48,6 @@ jobs:
         echo "IMG_VERSION=25.0.2" >> .env
         echo "ENV=dev" >> .env
 
-
-    # - name: Load environment variables and run script
-    #   run: |
-    #     set -a
-    #     source .env
-    #     set +a
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
