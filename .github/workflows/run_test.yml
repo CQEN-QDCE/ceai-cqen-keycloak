@@ -30,10 +30,10 @@ jobs:
       run: |
         echo "SERVER_OPTIONS__HOSTNAME=smtp4dev" >> .env
         echo "POSTGRES_DB=keycloak" >> .env
-        echo "POSTGRES_USER=keycloak" >> .env
-        echo "POSTGRES_PASSWORD=password" >> .env
-        echo "KEYCLOAK_ADMIN=admin" >> .env
-        echo "KEYCLOAK_ADMIN_PASSWORD=cqen" >> .env
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        echo "KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_ADMIN }}" >> .env
+        echo "KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" >> .env
         echo "KC_DB=postgres" >> .env
         echo "KC_DB_URL=jdbc:postgresql://postgres/keycloak" >> .env
         echo "KC_HOSTNAME=localhost" >> .env
