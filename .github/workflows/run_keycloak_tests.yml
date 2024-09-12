@@ -1,14 +1,8 @@
 name: CI for Keycloak with Docker
 
 on:
-  push:
-    branches:
-      - main
-      - 'feature/*'
   pull_request:
-    branches:
-      - main
-      - 'feature/*'
+    branches: ["release/*", "main"]
 
 
 jobs:
