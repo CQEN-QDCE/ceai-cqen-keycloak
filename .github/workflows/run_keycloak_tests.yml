@@ -10,6 +10,10 @@ on:
       - main
       - 'feature/*'
 
+env:
+  DOCKER_COMPOSE_FILE: docker-compose-dev.yml
+  REALM_TEMPLATE_FILE: ceai-realm.template.json
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -57,7 +61,18 @@ jobs:
       run: |
         pip install requests pytest  
 
-    - name: Build and run the script
+    - name: Copy realm template file
+      run: cp tests/${{ env.REALM_TEMPLATE_FILE }} container/realms/
+
+    - name: Build and start containers
       run: |
-        chmod +x ./run_tests.sh
-        ./run_tests.sh
+        docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE build
+        docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE up -d
+
+    - name: Run tests
+      run: python3 tests/test_keycloak.py
+
+    # - name: Build and run the script
+    #   run: |
+    #     chmod +x ./run_tests.sh
+    #     ./run_tests.sh
