@@ -53,15 +53,15 @@ while true; do
   elapsed=$((elapsed + INTERVAL))
 done
 
-# Exécuter les tests
-run_command python3 tests/test_keycloak.py
+# # Exécuter les tests
+# run_command python3 tests/test_keycloak.py
 
-# Arrêter et supprimer les conteneurs Docker
-run_command docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE down
+# # Arrêter et supprimer les conteneurs Docker
+# run_command docker-compose --env-file .env -f $DOCKER_COMPOSE_FILE down
 
-# Supprimer les fichiers .env et ceai-realm.template.json copiés
-rm .env
-rm container/realms/ceai-realm.template.json
+# # Supprimer les fichiers .env et ceai-realm.template.json copiés
+# rm .env
+# rm container/realms/ceai-realm.template.json
 
 
-echo "Tests completed successfully and project directory removed."
+# echo "Tests completed successfully and project directory removed."

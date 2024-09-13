@@ -4,7 +4,6 @@ on:
   pull_request:
     branches: ["release/*", "main"]
 
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -54,8 +53,8 @@ jobs:
 
     - name: Build and run the script
       run: |
-        chmod +x ./run_tests.sh
-        ./run_tests.sh
+        chmod +x ./build_keycloak.sh
+        ./build_keycloak.sh
 
     - name: Run tests
       run: python3 tests/test_keycloak.py
