@@ -1,0 +1,60 @@
+name: CI for Keycloak with Docker
+
+on:
+  pull_request:
+    branches: ["release/*", "main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker environment
+      uses: docker/setup-buildx-action@v1
+
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
+    - name: Create .env file
+      run: |
+        echo "SERVER_OPTIONS__HOSTNAME=smtp4dev" >> .env
+        echo "POSTGRES_DB=keycloak" >> .env
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        echo "KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_ADMIN }}" >> .env
+        echo "KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" >> .env
+        echo "KC_DB=postgres" >> .env
+        echo "KC_DB_URL=jdbc:postgresql://postgres/keycloak" >> .env
+        echo "KC_HOSTNAME=localhost" >> .env
+        echo "KC_DB_USERNAME=${{ secrets.KC_DB_USERNAME }}" >> .env
+        echo "KC_DB_PASSWORD=${{ secrets.KC_DB_PASSWORD }}" >> .env
+        echo "KC_FEATURES=hostname:v2" >> .env
+        echo "KC_HTTP_RELATIVE_PATH=/" >> .env
+        echo "KC_METRICS_ENABLED=true" >> .env
+        echo "KC_HEALTH_ENABLED=true" >> .env
+        echo "KC_PROXY_HEADERS=forwarded" >> .env
+        echo "KC_HTTP_MANAGEMENT_PORT=9000" >> .env
+        echo "IMG_VERSION=25.0.2" >> .env
+        echo "ENV=dev" >> .env
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  
+
+    - name: Install dependencies
+      run: |
+        pip install requests pytest  
+
+    - name: Build and run the script
+      run: |
+        chmod +x ./build_keycloak.sh
+        ./build_keycloak.sh
+
+    - name: Run tests
+      run: python3 tests/test_keycloak.py
