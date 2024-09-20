@@ -85,9 +85,6 @@ terraform.rc
 # Automatically generated files
 *.zip
 
-# GO generated File
-go.sum
-
 # Keys
 *.csr
 *.crt
