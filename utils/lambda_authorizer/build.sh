@@ -1,7 +1,9 @@
 #!/bin/bash
 
-GOOS=linux CGO_ENABLED=0 go build main.go
+go mod tidy
 
-zip - main > ./function.zip
+GOARCH=amd64 GOOS=linux go build -o bootstrap main.go
 
-rm main
+zip authorizer.zip bootstrap
+
+rm bootstrap
