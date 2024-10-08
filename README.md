@@ -50,6 +50,48 @@ docker build -t keycloak_image:prod --build-arg ENV=prod .
 docker build -t keycloak_image:upgrade .
 ```
 
+## Port de gestion
+
+Le port de gestion de Keycloak est un port spécifique utilisé pour exposer des fonctionnalités administratives et de gestion des ressources de Keycloak. En plus du port principal (généralement le port HTTP pour les applications), Keycloak permet également d’exposer un second port destiné à l’administration via le port de gestion.
+
+# Utilisation du Port de Gestion de Keycloak
+
+Le port de gestion permet de séparer les requêtes utilisateurs ordinaires (par exemple, celles qui concernent l'authentification et l'autorisation des utilisateurs) des opérations administratives et de gestion, comme :
+
+    Le monitoring de l'état de santé de Keycloak.
+    Le redémarrage ou le rechargement de configurations.
+    L'activation ou la désactivation de certaines fonctionnalités en cours d'exécution.
+
+# Exposer les Ports avec Docker
+
+Lorsque vous lancez Keycloak avec Docker, vous pouvez spécifier plusieurs ports pour que Keycloak écoute à la fois pour les utilisateurs et pour les administrateurs. En général :
+
+    Le port par défaut pour le serveur HTTP Keycloak est 8080.
+    Le port de gestion peut être configuré sur 9000.
+
+# Exemple de Commande docker run
+
+Pour exposer à la fois le port HTTP et le port de gestion dans une instance Docker, voici un exemple de commande docker run :
+
+```
+docker run -p 8080:8080 -p 9000:9000 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.6 start-dev
+```
+
+-p 8080:8080 : Lie le port 8080 du conteneur (Keycloak HTTP) au port 8080 de la machine hôte.
+-p 9990:9990 : Lie le port 9000 du conteneur (port de gestion) au port 9000 de la machine hôte.
+
+Cela permet de différencier les requêtes administratives des requêtes des utilisateurs. Vous pouvez configurer des règles d'accès pour protéger le port de gestion en fonction de vos besoins de sécurité.
+
+
+# Commandes de Gestion
+
+Après avoir exposé le port de gestion, vous pouvez interagir avec Keycloak en utilisant l'interface de gestion via ce port pour des tâches comme :
+
+    Vérifier l'état du serveur Keycloak.
+    Charger ou redémarrer certains composants.
+
+Ainsi, cela aide à garder l'interface utilisateur et les opérations administratives séparées pour une meilleure sécurité et gestion du service.
+
 ## Variables d'environnement
 
 | Nom                           | Description                                                   |
