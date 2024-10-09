@@ -52,15 +52,17 @@ docker build -t keycloak_image:upgrade .
 
 # Port de gestion
 
-Le port de gestion de Keycloak est un port spécifique utilisé pour exposer des fonctionnalités administratives et de gestion des ressources de Keycloak. En plus du port principal (généralement le port HTTP pour les applications), Keycloak permet également d’exposer un second port destiné à l’administration via le port de gestion.
+Le port de gestion (management port) dans Keycloak est utilisé pour des opérations spécifiques d'administration, comme le suivi de l'état, la gestion des clusters ou l'obtention de métriques, mais il ne donne pas directement accès à la console d'administration graphique de Keycloak.
 
-## Utilisation du Port de Gestion de Keycloak
+## Accès à partir du port de gestion 
 
 Le port de gestion permet de séparer les requêtes utilisateurs ordinaires (par exemple, celles qui concernent l'authentification et l'autorisation des utilisateurs) des opérations administratives et de gestion, comme :
 
 Le monitoring de l'état de santé de Keycloak.
 Le redémarrage ou le rechargement de configurations.
 L'activation ou la désactivation de certaines fonctionnalités en cours d'exécution.
+
+Le port de gestion, souvent différent du port principal de l'interface utilisateur, est utilisé pour des requêtes REST liées à la gestion du serveur Keycloak. Voici un exemple de comment interagir avec le port de gestion via l'API REST pour obtenir des informations sur le serveur.
 
 ## Exposer les Ports avec Docker
 
@@ -69,28 +71,47 @@ Lorsque vous lancez Keycloak avec Docker, vous pouvez spécifier plusieurs ports
 Le port par défaut pour le serveur HTTP Keycloak est 8080.
 Le port de gestion peut être configuré sur 9000.
 
-## Exemple de Commande docker run
+## Exemple de commande curl pour interagir avec le port de gestion :
 
-Pour exposer à la fois le port HTTP et le port de gestion dans une instance Docker, voici un exemple de commande docker run :
+Construire et démarrer les conteneurs Docker avec les variables d'environnement
 
 ```
-docker run -p 8080:8080 -p 9000:9000 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.6 start-dev
+sudo docker-compose -f docker-compose-dev.yml build
+
+sudo docker-compose -f docker-compose-dev.yml up
 ```
 
--p 8080:8080 : Lie le port 8080 du conteneur (Keycloak HTTP) au port 8080 de la machine hôte.
--p 9990:9990 : Lie le port 9000 du conteneur (port de gestion) au port 9000 de la machine hôte.
+Vous pouvez utiliser les commandes suivantes pour interroger l'état du serveur et l'obtention de métriques :
 
-Cela permet de différencier les requêtes administratives des requêtes des utilisateurs. Vous pouvez configurer des règles d'accès pour protéger le port de gestion en fonction de vos besoins de sécurité.
+```
+curl http://localhost:9000/health
+
+curl http://localhost:9000/metrics
+```
+Vous pouvez également utiliser les URLs :
+
+```
+http://localhost:9000/health
+
+http://localhost:9000/metrics
+```
+Ces requêtes vous retournerons les informations sur la santé du serveur keycloak et les métriques via le port de gestion.
+
+Cependant, pour accéder à la console d'administration complète, vous devrez utiliser le port principal (8080) et non le port de gestion. Le port de gestion n'est pas conçu pour l'accès à l'interface graphique de gestion de Keycloak, mais pour des opérations automatisées via API.
+
+Pour avoir accès a la console administration, vous devez utiliser l'URL:
+
+```
+http://localhost:8080
+```
 
 
-## Commandes de Gestion
+## En Résumé
 
-Après avoir exposé le port de gestion, vous pouvez interagir avec Keycloak en utilisant l'interface de gestion via ce port pour des tâches comme :
+Port principal (par défaut : 8080) : Utilisé pour la console d'administration graphique.
+Port de gestion (9000) : Utilisé pour des opérations REST d'administration.
 
-Vérifier l'état du serveur Keycloak.
-Charger ou redémarrer certains composants.
 
-Ainsi, cela aide à garder l'interface utilisateur et les opérations administratives séparées pour une meilleure sécurité et gestion du service.
 
 # Variables d'environnement
 
