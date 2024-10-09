@@ -109,6 +109,7 @@ http://localhost:8080
 ## En Résumé
 
 Port principal (par défaut : 8080) : Utilisé pour la console d'administration graphique.
+
 Port de gestion (9000) : Utilisé pour des opérations REST d'administration.
 
 
