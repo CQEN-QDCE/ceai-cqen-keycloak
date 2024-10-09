@@ -50,7 +50,71 @@ docker build -t keycloak_image:prod --build-arg ENV=prod .
 docker build -t keycloak_image:upgrade .
 ```
 
-## Variables d'environnement
+# Port de gestion
+
+Le port de gestion (management port) dans Keycloak est utilisé pour des opérations spécifiques d'administration, comme le suivi de l'état, la gestion des clusters ou l'obtention de métriques, mais il ne donne pas directement accès à la console d'administration graphique de Keycloak.
+
+## Accès à partir du port de gestion 
+
+Le port de gestion permet de séparer les requêtes utilisateurs ordinaires (par exemple, celles qui concernent l'authentification et l'autorisation des utilisateurs) des opérations administratives et de gestion, comme :
+
+Le monitoring de l'état de santé de Keycloak.
+Le redémarrage ou le rechargement de configurations.
+L'activation ou la désactivation de certaines fonctionnalités en cours d'exécution.
+
+Le port de gestion, souvent différent du port principal de l'interface utilisateur, est utilisé pour des requêtes REST liées à la gestion du serveur Keycloak. Voici un exemple de comment interagir avec le port de gestion via l'API REST pour obtenir des informations sur le serveur.
+
+## Exposer les Ports avec Docker
+
+Lorsque vous lancez Keycloak avec Docker, vous pouvez spécifier plusieurs ports pour que Keycloak écoute à la fois pour les utilisateurs et pour les administrateurs. En général :
+
+Le port par défaut pour le serveur HTTP Keycloak est 8080.
+Le port de gestion peut être configuré sur 9000.
+
+## Exemple de commande curl pour interagir avec le port de gestion :
+
+Construire et démarrer les conteneurs Docker avec les variables d'environnement
+
+```
+sudo docker-compose -f docker-compose-dev.yml build
+
+sudo docker-compose -f docker-compose-dev.yml up
+```
+
+Vous pouvez utiliser les commandes suivantes pour interroger l'état du serveur et l'obtention de métriques :
+
+```
+curl http://localhost:9000/health
+
+curl http://localhost:9000/metrics
+```
+Vous pouvez également utiliser les URLs :
+
+```
+http://localhost:9000/health
+
+http://localhost:9000/metrics
+```
+Ces requêtes vous retournerons les informations sur la santé du serveur keycloak et les métriques via le port de gestion.
+
+Cependant, pour accéder à la console d'administration complète, vous devrez utiliser le port principal (8080) et non le port de gestion. Le port de gestion n'est pas conçu pour l'accès à l'interface graphique de gestion de Keycloak, mais pour des opérations automatisées via API.
+
+Pour avoir accès a la console administration, vous devez utiliser l'URL:
+
+```
+http://localhost:8080
+```
+
+
+## En Résumé
+
+Port principal (par défaut : 8080) : Utilisé pour la console d'administration graphique.
+
+Port de gestion (9000) : Utilisé pour des opérations REST d'administration.
+
+
+
+# Variables d'environnement
 
 | Nom                           | Description                                                   |
 | ----------------------------  | ------------------------------------------------------------- |
