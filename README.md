@@ -73,12 +73,10 @@ Le port de gestion peut être configuré sur 9000.
 
 ## Exemple de commande curl pour interagir avec le port de gestion :
 
-Construire et démarrer les conteneurs Docker avec les variables d'environnement
+Démarrer le conteneurs Docker avec les variables d'environnement
 
 ```
-sudo docker-compose -f docker-compose-dev.yml build
-
-sudo docker-compose -f docker-compose-dev.yml up
+docker run -p 8080:8080 -p 9000:9000 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e ENV=dev -e KC_HTTP_MANAGEMENT_PORT=9000 -e KC_HEALTH_ENABLED=true -e KC_METRICS_ENABLED=true -e KC_PROXY_HEADERS=forwarded -e KC_HTTP_RELATIVE_PATH=/ -e KC_FEATURES=hostname:v2 -e IMG_VERSION=26.0.0 -e REALM_NAME_PASSWORD=ceai -e USERNAME=admin -e PASSWORD=cqen keycloak_image:dev start-dev
 ```
 
 Vous pouvez utiliser les commandes suivantes pour interroger l'état du serveur et l'obtention de métriques :
