@@ -73,10 +73,10 @@ Le port de gestion peut être configuré sur 9000.
 
 ## Exemple de commande curl pour interagir avec le port de gestion :
 
-Démarrer le conteneurs Docker avec les variables d'environnement
+Démarrer le conteneur de développement en spécifiant un port de gestion:
 
 ```
-docker run -p 8080:8080 -p 9000:9000 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e ENV=dev -e KC_HTTP_MANAGEMENT_PORT=9000 -e KC_HEALTH_ENABLED=true -e KC_METRICS_ENABLED=true -e KC_PROXY_HEADERS=forwarded -e KC_HTTP_RELATIVE_PATH=/ -e KC_FEATURES=hostname:v2 -e IMG_VERSION=25.0.6 -e REALM_NAME_PASSWORD=ceai -e USERNAME=admin -e PASSWORD=cqen keycloak_image:dev start-dev
+docker run -p 8080:8080 -p 9000:9000 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e ENV=dev -e KC_HTTP_MANAGEMENT_PORT=9000 -e KC_HEALTH_ENABLED=true -e KC_METRICS_ENABLED=true keycloak_image:dev start-dev
 ```
 
 Vous pouvez utiliser les commandes suivantes pour interroger l'état du serveur et l'obtention de métriques :
@@ -86,13 +86,7 @@ curl http://localhost:9000/health
 
 curl http://localhost:9000/metrics
 ```
-Vous pouvez également utiliser les URLs :
 
-```
-http://localhost:9000/health
-
-http://localhost:9000/metrics
-```
 Ces requêtes vous retournerons les informations sur la santé du serveur keycloak et les métriques via le port de gestion.
 
 Cependant, pour accéder à la console d'administration complète, vous devrez utiliser le port principal (8080) et non le port de gestion. Le port de gestion n'est pas conçu pour l'accès à l'interface graphique de gestion de Keycloak, mais pour des opérations automatisées via API.
@@ -102,13 +96,6 @@ Pour avoir accès a la console administration, vous devez utiliser l'URL:
 ```
 http://localhost:8080
 ```
-
-
-## En Résumé
-
-Port principal (par défaut : 8080) : Utilisé pour la console d'administration graphique.
-
-Port de gestion (9000) : Utilisé pour des opérations REST d'administration.
 
 
 
