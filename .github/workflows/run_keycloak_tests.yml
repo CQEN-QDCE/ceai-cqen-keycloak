@@ -39,7 +39,7 @@ jobs:
         echo "KC_HEALTH_ENABLED=true" >> .env
         echo "KC_PROXY_HEADERS=forwarded" >> .env
         echo "KC_HTTP_MANAGEMENT_PORT=9000" >> .env
-        echo "IMG_VERSION=25.0.2" >> .env
+        echo "IMG_VERSION=25.0.6" >> .env
         echo "ENV=dev" >> .env
 
     - name: Set up Python
