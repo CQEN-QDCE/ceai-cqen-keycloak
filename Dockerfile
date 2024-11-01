@@ -48,7 +48,7 @@ COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/tar
 WORKDIR /opt/keycloak
 
 # Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
-RUN /opt/keycloak/bin/kc.sh build --health-enabled=true
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true --metrics-enabled=true --features=token-exchange
 
 # Étape finale de création de l'image Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} as keycloak
