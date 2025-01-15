@@ -1,5 +1,5 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION=26.0.7
+# ARG IMG_VERSION=26.0.7
 ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
