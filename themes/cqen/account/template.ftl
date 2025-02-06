@@ -87,7 +87,7 @@
         <div class="container-fluid text-center">
             <div class="row">
                 <div class="col-12 " lang="fr"><a href="https://quebec.ca"><img id="logoFooter" alt="Gouvernement du Québec." src="${url.resourcesPath}/img/logo_quebec_footer.svg" width="117" height="35"></a></div>
-                <div class="col-12 "><p><a href="http://www.droitauteur.gouv.qc.ca/copyright.php" target="_self">© Gouvernement du Québec,&nbsp;2022</a></p></div>
+                <div class="col-12 "><p><a href="http://www.droitauteur.gouv.qc.ca/copyright.php" target="_self">© Gouvernement du Québec,&nbsp;2025</a></p></div>
             </div>
         </div>
     </div>
