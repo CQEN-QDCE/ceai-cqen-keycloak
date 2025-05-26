@@ -8,14 +8,37 @@ keycloak:
     requests:
       cpu: 500m
       memory: 1700Mi
-  host: keycloak-preprod.cqen.ca
+  host: keyclaok-preprod.asea.cqen.ca
   tlsEnabled: false
-  tlsSecretName: keycloak-tls
 
 postgres:
   image: mirror.gcr.io/postgres:17
   db: keycloak
   host: postgres
+
+ingress:
+  name: keycloak-ingress
+  namespace: keycloak-test
+  class: alb
+  annotations:
+    certificateArn: ''
+    listenPorts: '[{"HTTPS":443}]'
+    sslRedirect: "443"
+    loadBalancerAttributes: 'routing.http.drop_invalid_header_fields.enabled=true'
+    scheme: internal
+    targetType: ip
+    backendProtocol: HTTPS
+    healthcheckPort: "status-port"
+    healthcheckProtocol: HTTP
+    subnets: ''
+  tlsEnabled: false
+  tlsSecretName: keycloak-tls
+  host: keyclaok-preprod.asea.cqen.ca
+  path: "/"
+  pathType: Prefix
+  serviceName: keycloak
+  servicePortName: https
+  servicePort: 443
 
 # Les credentials sont gérés via des secrets Kubernetes (keycloak-admin et keycloak-db)
 # Pour les tests, créez les secrets avec :
