@@ -18,7 +18,7 @@ postgres:
 
 ingress:
   name: keycloak-ingress
-  namespace: keycloak-test
+  namespace: keyclaok-test
   class: alb
   annotations:
     certificateArn: ''
