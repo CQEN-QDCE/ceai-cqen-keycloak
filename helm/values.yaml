@@ -1,0 +1,23 @@
+keycloak:
+  image: quay.io/keycloak/keycloak:26.2.4
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2000Mi
+    requests:
+      cpu: 500m
+      memory: 1700Mi
+  host: keycloak-preprod.cqen.ca
+  tlsEnabled: false
+  tlsSecretName: keycloak-tls
+
+postgres:
+  image: mirror.gcr.io/postgres:17
+  db: keycloak
+  host: postgres
+
+# Les credentials sont gérés via des secrets Kubernetes (keycloak-admin et keycloak-db)
+# Pour les tests, créez les secrets avec :
+# kubectl create secret generic keycloak-admin --from-literal=username=admin --from-literal=password=admin
+# kubectl create secret generic keycloak-db --from-literal=username=keycloak --from-literal=password=keycloak
