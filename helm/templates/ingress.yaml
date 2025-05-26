@@ -9,7 +9,6 @@ spec:
   tls:
     - hosts:
         - {{ .Values.keycloak.host | quote }}
-      secretName: {{ .Values.keycloak.tlsSecretName }}
   {{- end }}
   rules:
     - host: {{ .Values.keycloak.host | quote }}
