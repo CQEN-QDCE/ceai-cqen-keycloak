@@ -32,7 +32,8 @@ spec:
               service:
                 name: {{ .Values.ingress.serviceName }}
                 port:
-                    name: https
+                  {{- if .Values.ingress.servicePortName }}
+                  name: {{ .Values.ingress.servicePortName }}
                   {{- else }}
                   number: {{ .Values.ingress.servicePort }}
                   {{- end }}
