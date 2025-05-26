@@ -50,9 +50,9 @@ spec:
           args: ["start"]
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              value: "test"
+              value: "keycloak"
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              value: "test"
+              value: "keycloak"
             - name: KC_PROXY_HEADERS
               value: "xforwarded"
             - name: KC_HTTP_ENABLED
@@ -78,24 +78,24 @@ spec:
             - name: 'KC_DB'
               value: 'postgres'
             - name: 'KC_DB_PASSWORD'
-              value: 'test'
+              value: 'keycloak'
             - name: 'KC_DB_USERNAME'
-              value: 'test'
+              value: 'keycloak'
           ports:
             - name: http
               containerPort: 8080
-          startupProbe:
-            httpGet:
-              path: /health/started
-              port: 9000
-          readinessProbe:
-            httpGet:
-              path: /health/ready
-              port: 9000
-          livenessProbe:
-            httpGet:
-              path: /health/live
-              port: 9000
+          # startupProbe:
+          #   httpGet:
+          #     path: /health/started
+          #     port: 9000
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health/ready
+          #     port: 9000
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health/live
+          #     port: 9000
           resources:
             limits:
               cpu: {{ .Values.keycloak.resources.limits.cpu }}
@@ -125,9 +125,9 @@ spec:
           image: {{ .Values.postgres.image }}
           env:
             - name: POSTGRES_USER
-              value: "test"
+              value: "keycloak"
             - name: POSTGRES_PASSWORD
-              value: "test"
+              value: "keycloak"
             - name: POSTGRES_DB
               value: {{ .Values.postgres.db | quote }}
             - name: POSTGRES_LOG_STATEMENT
