@@ -129,8 +129,6 @@ spec:
             - name: POSTGRES_PASSWORD
               value: "test"
             - name: POSTGRES_DB
-              value: "test"
-            - name: POSTGRES_DB
               value: {{ .Values.postgres.db | quote }}
             - name: POSTGRES_LOG_STATEMENT
               value: "all"
