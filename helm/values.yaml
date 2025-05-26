@@ -8,8 +8,9 @@ keycloak:
     requests:
       cpu: 500m
       memory: 1700Mi
-  host: keyclaok-preprod.asea.cqen.ca
+  host: keycloak-preprod.asea.cqen.ca
   tlsEnabled: false
+  tlsSecretName: keycloak-tls
 
 postgres:
   image: mirror.gcr.io/postgres:17
@@ -18,7 +19,7 @@ postgres:
 
 ingress:
   name: keycloak-ingress
-  namespace: keyclaok-test
+  namespace: keycloak-test
   class: alb
   annotations:
     certificateArn: ''
@@ -28,12 +29,12 @@ ingress:
     scheme: internal
     targetType: ip
     backendProtocol: HTTPS
-    healthcheckPort: "status-port"
+    healthcheckPort: "8080"
     healthcheckProtocol: HTTP
     subnets: ''
   tlsEnabled: false
   tlsSecretName: keycloak-tls
-  host: keyclaok-preprod.asea.cqen.ca
+  host: keycloak-preprod.asea.cqen.ca
   path: "/"
   pathType: Prefix
   serviceName: keycloak

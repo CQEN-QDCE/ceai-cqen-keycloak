@@ -14,7 +14,6 @@ metadata:
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.annotations.scheme | quote }}
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.annotations.targetType | quote }}
     alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.annotations.backendProtocol | quote }}
-    alb.ingress.kubernetes.io/healthcheck-port: {{ .Values.ingress.annotations.healthcheckPort | quote }}
     alb.ingress.kubernetes.io/healthcheck-protocol: {{ .Values.ingress.annotations.healthcheckProtocol | quote }}
     alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.annotations.subnets | quote }}
 spec:
@@ -34,8 +33,7 @@ spec:
               service:
                 name: {{ .Values.ingress.serviceName }}
                 port:
-                  {{- if .Values.ingress.servicePortName }}
-                  name: {{ .Values.ingress.servicePortName }}
+                    name: https
                   {{- else }}
                   number: {{ .Values.ingress.servicePort }}
                   {{- end }}
