@@ -50,15 +50,9 @@ spec:
           args: ["start"]
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-admin
-                  key: username
+              value: "test"
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-admin
-                  key: password
+              value: "test"
             - name: KC_PROXY_HEADERS
               value: "xforwarded"
             - name: KC_HTTP_ENABLED
@@ -84,15 +78,9 @@ spec:
             - name: 'KC_DB'
               value: 'postgres'
             - name: 'KC_DB_PASSWORD'
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-db
-                  key: password
+              value: 'test'
             - name: 'KC_DB_USERNAME'
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-db
-                  key: username
+              value: 'test'
           ports:
             - name: http
               containerPort: 8080
@@ -137,15 +125,11 @@ spec:
           image: {{ .Values.postgres.image }}
           env:
             - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-db
-                  key: username
+              value: "test"
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-db
-                  key: password
+              value: "test"
+            - name: POSTGRES_DB
+              value: "test"
             - name: POSTGRES_DB
               value: {{ .Values.postgres.db | quote }}
             - name: POSTGRES_LOG_STATEMENT
