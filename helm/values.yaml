@@ -38,6 +38,7 @@ ingress:
   pathType: Prefix
   serviceName: keycloak
   servicePort: 8080
+  servicePortName: keycloak
 
 # Les credentials sont gérés via des secrets Kubernetes (keycloak-admin et keycloak-db)
 # Pour les tests, créez les secrets avec :
