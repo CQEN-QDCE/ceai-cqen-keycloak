@@ -32,4 +32,4 @@ spec:
               service:
                 name: {{ .Values.ingress.serviceName }}
                 port:
-                  number: {{ .Values.ingress.servicePort }}
+                  name: {{ .Values.ingress.servicePortName }}
