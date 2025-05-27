@@ -46,13 +46,13 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: {{ .Values.keycloak.image }}
+          image: "{{ printf "%s:%s" $.Values.keycloak.image $.Values.keycloak.imageTag }}"
           args: ["start"]
           env:
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              value: "keycloak"
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              value: "keycloak"
+            - name: KEYCLOAK_ADMIN
+              value: {{ .Values.keycloak.admin.username | quote }}
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: {{ .Values.keycloak.admin.password | quote }}
             - name: KC_PROXY_HEADERS
               value: "xforwarded"
             - name: KC_HTTP_ENABLED
@@ -65,6 +65,12 @@ spec:
               value: 'ispn'
             - name: 'KC_CACHE_STACK'
               value: 'kubernetes'
+            - name: 'JGROUPS_DISCOVERY_PROPERTIES'
+              value: 'datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500'
+            - name: 'JGROUPS_DISCOVERY_PROTOCOL'
+              value: 'JDBC_PING'
+            - name: 'KC_PROXY_HEADERS'
+              value: 'xforwarded'
             - name: POD_IP
               valueFrom:
                 fieldRef:
@@ -72,15 +78,15 @@ spec:
             - name: JAVA_OPTS_APPEND
               value: '-Djgroups.dns.query="keycloak-discovery" -Djgroups.bind.address=$(POD_IP)'
             - name: 'KC_DB_URL_DATABASE'
-              value: {{ .Values.postgres.db | quote }}
+              value: {{ .Values.keycloak.database | quote }}
             - name: 'KC_DB_URL_HOST'
-              value: {{ .Values.postgres.host | quote }}
+              value: {{ .Values.keycloak.host | quote }}
             - name: 'KC_DB'
               value: 'postgres'
             - name: 'KC_DB_PASSWORD'
-              value: 'keycloak'
+              value: {{ .Values.keycloak.db.password | quote }}
             - name: 'KC_DB_USERNAME'
-              value: 'keycloak'
+              value: {{ .Values.keycloak.db.username | quote }}
           ports:
             - name: http
               containerPort: 8080
@@ -125,9 +131,9 @@ spec:
           image: {{ .Values.postgres.image }}
           env:
             - name: POSTGRES_USER
-              value: "keycloak"
+              value: {{ .Values.postgres.username | quote }}
             - name: POSTGRES_PASSWORD
-              value: "keycloak"
+              value: {{ .Values.postgres.password | quote }}
             - name: POSTGRES_DB
               value: {{ .Values.postgres.db | quote }}
             - name: POSTGRES_LOG_STATEMENT

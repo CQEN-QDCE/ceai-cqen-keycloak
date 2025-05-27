@@ -1,5 +1,6 @@
 keycloak:
-  image: quay.io/keycloak/keycloak:26.2.4
+  image: quay.io/keycloak/keycloak
+  imageTag: 26.2.4
   replicaCount: 2
   resources:
     limits:
@@ -10,18 +11,27 @@ keycloak:
       memory: 1700Mi
   host: keyclaok-preprod.asea.cqen.ca
   tlsEnabled: false
+  admin:
+    username: admin
+    password: admin
+  db:
+    username: keycloak
+    password: keycloak
+    database: postgres
+    host: keycloak
 
 postgres:
   image: mirror.gcr.io/postgres:17
   db: keycloak
   host: postgres
 
+
 ingress:
   name: keycloak-ingress
   namespace: keyclaok-test
   class: alb
   annotations:
-    certificateArn: ''
+    acmCertificateArn: ''
     listenPorts: '[{"HTTPS":443}]'
     sslRedirect: "443"
     loadBalancerAttributes: 'routing.http.drop_invalid_header_fields.enabled=true'
@@ -30,7 +40,7 @@ ingress:
     backendProtocol: HTTP
     healthcheckPort: "status-port"
     healthcheckProtocol: HTTP
-    subnets: ''
+    subnetAllowList: ''
   tlsEnabled: false
   tlsSecretName: keycloak-tls
   host: keyclaok-preprod.asea.cqen.ca
