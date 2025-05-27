@@ -14,6 +14,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.annotations.targetType | quote }}
     alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.annotations.backendProtocol | quote }}
     alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.annotations.subnets | quote }}
+    alb.ingress.kubernetes.io/frontend-nlb-healthcheck-success-codes: '200-302'
 spec:
   ingressClassName: {{ .Values.ingress.class }}
   {{- if .Values.ingress.tlsEnabled }}
@@ -31,8 +32,5 @@ spec:
               service:
                 name: {{ .Values.ingress.serviceName }}
                 port:
-                  {{- if .Values.ingress.servicePortName }}
                   name: {{ .Values.ingress.servicePortName }}
-                  {{- else }}
                   number: {{ .Values.ingress.servicePort }}
-                  {{- end }}
