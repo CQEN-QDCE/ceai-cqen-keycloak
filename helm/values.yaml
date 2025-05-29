@@ -16,9 +16,9 @@ keycloak:
     password: ''
   db:
     username: ''
-    password: 
+    password: ''
     database: postgres
-    host: keycloak
+    host: postgres
 
 postgres:
   image: mirror.gcr.io/postgres:17
