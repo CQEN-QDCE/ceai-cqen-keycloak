@@ -12,11 +12,11 @@ keycloak:
   host: keyclaok-preprod.asea.cqen.ca
   tlsEnabled: false
   admin:
-    username: admin
-    password: admin
+    username: ''
+    password: ''
   db:
-    username: keycloak
-    password: keycloak
+    username: ''
+    password: 
     database: postgres
     host: keycloak
 
