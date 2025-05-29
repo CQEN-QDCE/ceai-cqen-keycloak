@@ -63,8 +63,6 @@ spec:
               value: "true"
             - name: 'KC_CACHE'
               value: 'ispn'
-            - name: 'KC_CACHE_STACK'
-              value: 'kubernetes'
             - name: 'JGROUPS_DISCOVERY_PROTOCOL'
               value: 'JDBC_PING'
             - name: 'KC_PROXY_HEADERS'
