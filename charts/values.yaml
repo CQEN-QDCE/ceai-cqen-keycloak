@@ -9,7 +9,7 @@ keycloak:
     requests:
       cpu: 500m
       memory: 1700Mi
-  host: keyclaok-preprod.asea.cqen.ca
+  host: ''
   tlsEnabled: false
   admin:
     username: ''
@@ -28,7 +28,7 @@ postgres:
 
 ingress:
   name: keycloak-ingress
-  namespace: keyclaok-test
+  namespace: ''
   class: alb
   annotations:
     acmCertificateArn: ''
@@ -43,7 +43,7 @@ ingress:
     subnetAllowList: ''
   tlsEnabled: false
   tlsSecretName: keycloak-tls
-  host: keyclaok-preprod.asea.cqen.ca
+  host: ''
   path: "/"
   pathType: Prefix
   serviceName: keycloak
