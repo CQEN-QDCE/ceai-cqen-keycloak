@@ -87,8 +87,6 @@ spec:
               value: {{ .Values.keycloak.db.database | quote }}
             - name: 'KC_DB_URL_HOST'
               value: {{ .Values.keycloak.db.host | quote }}
-            - name: 'KC_DB'
-              value: {{ .Values.keycloak.db.db | quote }}
             - name: 'KC_DB_PASSWORD'
               valueFrom:
                 secretKeyRef:
