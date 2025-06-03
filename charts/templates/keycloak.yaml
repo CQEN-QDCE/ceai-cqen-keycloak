@@ -73,6 +73,8 @@ spec:
               value: 'JDBC_PING'
             - name: 'KC_PROXY_HEADERS'
               value: 'xforwarded'
+            - name: 'KC_DB'
+              value: 'postgres'
             - name: POD_IP
               valueFrom:
                 fieldRef:
