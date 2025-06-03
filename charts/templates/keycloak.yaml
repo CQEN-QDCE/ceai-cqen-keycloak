@@ -63,18 +63,14 @@ spec:
               value: "xforwarded"
             - name: KC_HTTP_ENABLED
               value: "true"
-            - name: KC_HOSTNAME_STRICT
-              value: "false"
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_HOSTNAME
-              value: {{ .Values.keycloak.host | quote }}
-            - name: 'KC_CACHE'
-              value: 'ispn'
+              value: {{ .Values.keycloak.host | quote }}   
+            - name: "JGROUPS_DISCOVERY_PROPERTIES"      
+              value: "datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500"
             - name: 'JGROUPS_DISCOVERY_PROTOCOL'
               value: 'JDBC_PING'
-            - name: 'KC_PROXY_HEADERS'
-              value: 'xforwarded'
             - name: 'KC_DB'
               value: 'postgres'
             - name: POD_IP
