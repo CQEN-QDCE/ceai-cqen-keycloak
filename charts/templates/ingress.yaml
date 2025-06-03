@@ -3,9 +3,7 @@ kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.annotations.acmCertificateArn | quote }}
     alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.annotations.listenPorts | quote }}
-    alb.ingress.kubernetes.io/ssl-redirect: {{ .Values.ingress.annotations.sslRedirect | quote }}
     alb.ingress.kubernetes.io/load-balancer-attributes: {{ .Values.ingress.annotations.loadBalancerAttributes | quote }}
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.annotations.scheme | quote }}
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.annotations.targetType | quote }}
