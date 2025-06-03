@@ -44,7 +44,7 @@ ingress:
   tlsEnabled: false
   tlsSecretName: keycloak-tls
   host: ''
-  path: "/"
+  path: "/*"
   pathType: Prefix
   serviceName: keycloak
   servicePort: 8080
