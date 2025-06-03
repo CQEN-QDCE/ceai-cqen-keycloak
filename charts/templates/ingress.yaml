@@ -4,7 +4,6 @@ metadata:
   name: {{ .Values.ingress.name }}
   annotations:
     alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.annotations.listenPorts | quote }}
-    alb.ingress.kubernetes.io/load-balancer-attributes: {{ .Values.ingress.annotations.loadBalancerAttributes | quote }}
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.annotations.scheme | quote }}
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.annotations.targetType | quote }}
     alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.annotations.backendProtocol | quote }}
