@@ -27,7 +27,7 @@ spec:
               service:
                 name: {{ $customPath.serviceName | default $.Values.ingress.serviceName }}
                 port:
-                  number: {{ $customPath.servicePort | default $.Values.ingress.servicePort }}
+                  number: 80
           {{- end }}
           - path: /
             pathType: Prefix
@@ -35,4 +35,4 @@ spec:
               service:
                 name: {{ .Values.ingress.serviceName }}
                 port:
-                  number: {{ .Values.ingress.servicePort }}
+                  number: 80
