@@ -1,6 +1,6 @@
 keycloak:
   image: quay.io/keycloak/keycloak
-  imageTag: 26.2.4
+  imageTag: 26.2.5
   replicaCount: 2
   resources:
     limits:
