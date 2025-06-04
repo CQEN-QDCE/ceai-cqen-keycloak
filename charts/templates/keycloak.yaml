@@ -71,7 +71,7 @@ spec:
               value: "true"
             - name: KC_HEALTH_ENABLED
               value: "true"
-            - name: KC_HOSTNAME
+            - name: KC_HOSTNAME_URL
               value: {{ .Values.keycloak.host | quote }}   
             - name: "JGROUPS_DISCOVERY_PROPERTIES"      
               value: "datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500"
