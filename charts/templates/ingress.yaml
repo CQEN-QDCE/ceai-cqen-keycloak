@@ -20,8 +20,17 @@ spec:
     - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
-          - path: {{ .Values.ingress.path }}
-            pathType: {{ .Values.ingress.pathType }}
+          {{- range $customPath := .Values.ingress.extraPaths }}
+          - path: {{ $customPath.path }}
+            pathType: {{ $customPath.pathType | default "Prefix" }}
+            backend:
+              service:
+                name: {{ $customPath.serviceName | default $.Values.ingress.serviceName }}
+                port:
+                  number: {{ $customPath.servicePort | default $.Values.ingress.servicePort }}
+          {{- end }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: {{ .Values.ingress.serviceName }}
