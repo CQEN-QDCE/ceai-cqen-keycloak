@@ -65,6 +65,8 @@ spec:
                   key: KEYCLOAK_ADMIN_PASSWORD
             - name: KC_PROXY_HEADERS
               value: "xforwarded"
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
             - name: KC_METRICS_ENABLED
               value: "true"
 
