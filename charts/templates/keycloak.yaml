@@ -63,8 +63,8 @@ spec:
                 secretKeyRef:
                   name: keycloak-secret
                   key: KEYCLOAK_ADMIN_PASSWORD
-            - name: KC_PROXY_HEADERS
-              value: "xforwarded"
+            # - name: KC_PROXY_HEADERS
+            #   value: "xforwarded"
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED
