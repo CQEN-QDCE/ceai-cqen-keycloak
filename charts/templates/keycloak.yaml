@@ -10,13 +10,9 @@ spec:
       port: 8080
       targetPort: 8080
       name: http
-    - protocol: TCP
-      port: 9000
-      targetPort: 9000
-      name: http-management
   selector:
     app: keycloak
-  type: ClusterIP
+  type: NodePort
 ---
 apiVersion: v1
 kind: Service
@@ -77,10 +73,6 @@ spec:
               value: 'JDBC_PING'
             - name: 'KC_DB'
               value: 'postgres'
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
             # - name: JAVA_OPTS_APPEND
             #   value: '-Djgroups.dns.query="keycloak-discovery" -Djgroups.bind.address=$(POD_IP)'
             - name: 'KC_DB_URL_DATABASE'
