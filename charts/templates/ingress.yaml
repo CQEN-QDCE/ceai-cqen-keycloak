@@ -22,16 +22,7 @@ spec:
   rules:
     - host: {{ .Values.ingress.host | quote }}
       http:
-        # paths:
-        #   {{- range $customPath := .Values.ingress.extraPaths }}
-        #   - path: {{ $customPath.path }}
-        #     pathType: {{ $customPath.pathType | default "Prefix" }}
-        #     backend:
-        #       service:
-        #         name: {{ $customPath.serviceName | default $.Values.ingress.serviceName }}
-        #         port:
-        #           number: {{ $customPath.servicePort | default $.Values.ingress.servicePort }}
-        #   {{- end }}
+        paths:
           - path: /
             pathType: Prefix
             backend:
