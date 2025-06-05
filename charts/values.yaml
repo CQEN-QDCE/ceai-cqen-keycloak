@@ -47,7 +47,7 @@ ingress:
   path: "/"
   pathType: Prefix
   serviceName: keycloak
-  servicePort: 80
+  servicePort: 8080
   servicePortName: keycloak
   extraPaths:
     - path: /health
