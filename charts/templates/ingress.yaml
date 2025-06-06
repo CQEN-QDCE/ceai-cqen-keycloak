@@ -3,11 +3,9 @@ kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}
   annotations:
-       # alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.annotations.listenPorts | quote }}
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 8080}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/listen-ports: {{ .Values.ingress.annotations.listenPorts | quote }}
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.annotations.scheme | quote }}
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.annotations.targetType | quote }}
-    #alb.ingress.kubernetes.io/target-type: instance
     alb.ingress.kubernetes.io/backend-protocol: {{ .Values.ingress.annotations.backendProtocol | quote }}
     alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.annotations.subnetAllowList | quote }}
     alb.ingress.kubernetes.io/success-codes: 200-302

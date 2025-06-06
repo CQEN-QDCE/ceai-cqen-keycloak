@@ -59,8 +59,6 @@ spec:
                 secretKeyRef:
                   name: keycloak-secret
                   key: KEYCLOAK_ADMIN_PASSWORD
-            - name: KC_PROXY
-              value: "edge"
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED
@@ -77,8 +75,6 @@ spec:
               value: 'JDBC_PING'
             - name: 'KC_DB'
               value: 'postgres'
-            - name: 'PROXY_ADDRESS_FORWARDING'
-              value: 'true'
             # - name: JAVA_OPTS_APPEND
             #   value: '-Djgroups.dns.query="keycloak-discovery" -Djgroups.bind.address=$(POD_IP)'
             - name: 'KC_DB_URL_DATABASE'
