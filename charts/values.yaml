@@ -9,7 +9,7 @@ keycloak:
     requests:
       cpu: 500m
       memory: 1700Mi
-  host: 'auth.preprod.ceai.cqen.ca'
+  host: ''
   tlsEnabled: false
   admin:
     username: ''
