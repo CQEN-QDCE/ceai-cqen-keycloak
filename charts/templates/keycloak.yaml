@@ -73,6 +73,8 @@ spec:
               value: 'JDBC_PING'
             - name: 'KC_DB'
               value: 'postgres'
+            - name: 'PROXY_ADDRESS_FORWARDING'
+              value: 'true'
             # - name: JAVA_OPTS_APPEND
             #   value: '-Djgroups.dns.query="keycloak-discovery" -Djgroups.bind.address=$(POD_IP)'
             - name: 'KC_DB_URL_DATABASE'
