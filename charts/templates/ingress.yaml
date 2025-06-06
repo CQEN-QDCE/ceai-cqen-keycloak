@@ -16,9 +16,9 @@ spec:
   ingressClassName: {{ .Values.ingress.class }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host | quote }}
+        - keycloak-preprod.asea.cqen.ca
   rules:
-    - host: {{ .Values.ingress.host | quote }}
+    - host: keycloak-preprod.asea.cqen.ca
       http:
         paths:
           - path: /
