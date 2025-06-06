@@ -47,7 +47,7 @@ spec:
       containers:
         - name: keycloak
           image: "{{ printf "%s:%s" $.Values.keycloak.image $.Values.keycloak.imageTag }}"
-          args: ["start --proxy-headers forwarded"]
+          args: ["start"]
           env:
             - name: KEYCLOAK_ADMIN
               valueFrom:
