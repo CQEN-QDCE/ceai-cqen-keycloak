@@ -78,6 +78,8 @@ spec:
             # - name: JAVA_OPTS_APPEND
             #   value: '-Djgroups.dns.query="keycloak-discovery" -Djgroups.bind.address=$(POD_IP)'
             - name: 'KC_DB_URL_DATABASE'
+            - name: 'KEYCLOAK_FRONTEND_URL'
+              value: {{ .Values.keycloak.host | quote }}
               value: {{ .Values.keycloak.db.database | quote }}
             - name: 'KC_DB_URL_HOST'
               value: {{ .Values.keycloak.db.host | quote }}
