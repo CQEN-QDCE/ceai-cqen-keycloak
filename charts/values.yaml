@@ -9,7 +9,7 @@ keycloak:
     requests:
       cpu: 500m
       memory: 1700Mi
-  host: ''
+  host: 'auth.preprod.ceai.cqen.ca'
   tlsEnabled: false
   admin:
     username: ''
@@ -50,12 +50,12 @@ ingress:
   servicePort: 8080
   servicePortName: keycloak
   extraPaths:
+    - path: /health/*
+      pathType: Prefix
     - path: /health
       pathType: Prefix
-      servicePort: 9000
     - path: /metrics
       pathType: Prefix
-      servicePort: 9000
 
 # Les credentials sont gérés via des secrets Kubernetes (keycloak-admin et keycloak-db)
 # Pour les tests, créez les secrets avec :
