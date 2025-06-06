@@ -47,7 +47,7 @@ spec:
       containers:
         - name: keycloak
           image: "{{ printf "%s:%s" $.Values.keycloak.image $.Values.keycloak.imageTag }}"
-          args: ["start-dev"]
+          args: ["start --proxy-headers forwarded"]
           env:
             - name: KEYCLOAK_ADMIN
               valueFrom:
@@ -66,7 +66,7 @@ spec:
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_HOSTNAME
-              value: {{ .Values.keycloak.host | quote }}   
+              value: {{ .Values.keycloak.host | quote }}
             - name: "JGROUPS_DISCOVERY_PROPERTIES"      
               value: "datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500"
             - name: 'JGROUPS_DISCOVERY_PROTOCOL'
