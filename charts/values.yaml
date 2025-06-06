@@ -35,7 +35,7 @@ ingress:
     listenPorts: '[{"HTTP":8080}]'
     sslRedirect: "443"
     loadBalancerAttributes: 'routing.http.drop_invalid_header_fields.enabled=true'
-    scheme: internal
+    scheme: internet-facing
     targetType: ip
     backendProtocol: HTTP
     healthcheckPort: "status-port"
