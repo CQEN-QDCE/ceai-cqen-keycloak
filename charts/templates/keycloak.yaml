@@ -65,6 +65,10 @@ spec:
               value: "true"
             - name: KC_HEALTH_ENABLED
               value: "true"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
+            - name: KC_HTTP_ENABLED
+              value: "true"
             - name: KC_HOSTNAME
               value: {{ .Values.keycloak.host | quote }}
             - name: "JGROUPS_DISCOVERY_PROPERTIES"      
