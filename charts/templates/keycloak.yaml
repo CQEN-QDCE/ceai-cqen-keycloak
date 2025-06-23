@@ -86,15 +86,18 @@ spec:
             - name: 'KC_DB_URL_HOST'
               value: {{ .Values.keycloak.db.host | quote }}
             - name: 'KC_DB_PASSWORD'
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-secret
-                  key: KC_DB_PASSWORD
+              value: {{ .Values.keycloak.db.username | quote }}
             - name: 'KC_DB_USERNAME'
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-secret
-                  key: KC_DB_USERNAME
+              value: {{ .Values.keycloak.db.password | quote }}
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: keycloak-secret
+            #       key: KC_DB_PASSWORD
+            # - name: 'KC_DB_USERNAME'
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: keycloak-secret
+            #       key: KC_DB_USERNAME
           ports:
             - name: http
               containerPort: 8080
