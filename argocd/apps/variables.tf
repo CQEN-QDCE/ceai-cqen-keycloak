@@ -7,7 +7,7 @@ variable "cluster_name" {
     condition     = length(var.cluster_name) > 0 && length(var.cluster_name) <= 19
     error_message = "The cluster name must be between [1, 19] characters"
   }
-  default     = "cluster-eks"
+  default = "cluster-eks"
 
 }
 

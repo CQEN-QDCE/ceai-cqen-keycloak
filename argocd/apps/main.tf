@@ -13,7 +13,7 @@ locals {
   get_token_command = local.using_assume_role_arn ? ["eks", "get-token", "--cluster-name", local.cluster_name] : ["eks", "get-token", "--cluster-name", local.cluster_name, "--profile", local.aws_profile]
 
   tags = {
-    Cluster    = var.cluster_name
+    Cluster     = var.cluster_name
     Environment = var.workload_account_type
   }
 
@@ -29,6 +29,6 @@ module "sea_network" {
 
   aws_profile           = local.aws_profile
   workload_account_type = local.environment
-  
+
 
 }

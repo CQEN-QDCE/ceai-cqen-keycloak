@@ -65,21 +65,21 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
         path           = var.chart_path_keycloak
 
         helm = {
-          values = yamlencode({           
+          values = yamlencode({
             keycloak = {
-              host          = var.host_path_keycloak
-              image         = var.server_image_keycloak
-              imageTag      = var.image_tag_keycloak
-              replicaCount  = var.replica_count_keycloak
+              host         = var.host_path_keycloak
+              image        = var.server_image_keycloak
+              imageTag     = var.image_tag_keycloak
+              replicaCount = var.replica_count_keycloak
               admin = {
-                username   = random_password.keycloak_admin_user.result
-                password   = random_password.keycloak_admin_password.result
+                username = random_password.keycloak_admin_user.result
+                password = random_password.keycloak_admin_password.result
               }
               db = {
-                username    = var.keycloak_db_admin_user
-                password    = var.keycloak_db_admin_password
-                host        = var.endpoint_bd_keycloak
-                name        = var.keycloak_db_name
+                username = var.keycloak_db_admin_user
+                password = var.keycloak_db_admin_password
+                host     = var.endpoint_bd_keycloak
+                name     = var.keycloak_db_name
               }
             }
             ingress = {
