@@ -1,7 +1,19 @@
 keycloak:
+  enabled: true
   image: quay.io/keycloak/keycloak
   imageTag: 26.2.5
   replicaCount: 2
+  host: ''
+  tlsEnabled: false
+  admin:
+    username: ''
+    password: ''
+  db:
+    enabled: true
+    username: ''
+    password: ''
+    host: ''
+    name: ''
   resources:
     limits:
       cpu: 2000m
@@ -9,24 +21,24 @@ keycloak:
     requests:
       cpu: 500m
       memory: 1700Mi
-  host: ''
-  tlsEnabled: false
-  admin:
-    username: ''
-    password: ''
-  db:
-    username: ''
-    password: ''
-    host: ''
-    name: ''
 
-postgres:
-  image: mirror.gcr.io/postgres:17
-  db: keycloak
-  host: postgres
+db:
+  enabled: false
+  image:
+    repository: mirror.gcr.io/postgres
+    tag: "17"
+  replicaCount: 1
+  secretName: keycloak-secret
+  logStatement: "all"
+  persistence:
+    enabled: false
+    existingClaim: ""
+  service:
+    type: ClusterIP
 
 
 ingress:
+  enabled: true
   name: keycloak-ingress
   namespace: ''
   class: alb

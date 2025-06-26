@@ -1,32 +1,4 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: keycloak
-  labels:
-    app: keycloak
-spec:
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-      name: http
-  selector:
-    app: keycloak
-  type: NodePort
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: keycloak
-  name: keycloak-discovery
-spec:
-  selector:
-    app: keycloak
-  publishNotReadyAddresses: true
-  clusterIP: None
-  type: ClusterIP
----
+{{- if .Values.keycloak.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -46,73 +18,52 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: "{{ printf "%s:%s" $.Values.keycloak.image $.Values.keycloak.imageTag }}"
+          image: "{{ .Values.keycloak.image }}:{{ .Values.keycloak.imageTag }}"
           args: ["start"]
           env:
             - name: KEYCLOAK_ADMIN
               valueFrom:
                 secretKeyRef:
-                  name: keycloak-secret
+                  name: {{ include "keycloak.fullname" . }}-secret
                   key: KEYCLOAK_ADMIN
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: keycloak-secret
+                  name: {{ include "keycloak.fullname" . }}-secret
                   key: KEYCLOAK_ADMIN_PASSWORD
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL_HOST
+              value: {{ .Values.keycloak.db.host | quote }}
+            - name: KC_DB_URL_DATABASE
+              value: {{ .Values.keycloak.db.name | quote }}
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "keycloak.fullname" . }}-secret
+                  key: KC_DB_USERNAME
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "keycloak.fullname" . }}-secret
+                  key: KC_DB_PASSWORD
+            - name: KC_HOSTNAME
+              value: {{ .Values.keycloak.host | quote }}
+            - name: KC_HTTP_ENABLED
+              value: "true"
             - name: KC_METRICS_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_PROXY_HEADERS
               value: "xforwarded"
-            - name: KC_HTTP_ENABLED
-              value: "true"
-            - name: KC_HOSTNAME
-              value: {{ .Values.keycloak.host | quote }}
-            - name: "JGROUPS_DISCOVERY_PROPERTIES"      
+            - name: JGROUPS_DISCOVERY_PROTOCOL
+              value: "JDBC_PING"
+            - name: JGROUPS_DISCOVERY_PROPERTIES
               value: "datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500"
-            - name: 'JGROUPS_DISCOVERY_PROTOCOL'
-              value: 'JDBC_PING'
-            - name: 'KC_DB'
-              value: 'postgres'
-            # - name: 'KC_DB_SCHEMA'
-            #   value: {{ .Values.keycloak.db.name | quote }}
-            # - name: JAVA_OPTS_APPEND
-            #   value: '-Djgroups.dns.query="keycloak-discovery" -Djgroups.bind.address=$(POD_IP)'
-            - name: 'KC_DB_URL_DATABASE'
-              value: {{ .Values.keycloak.db.name | quote }}
-            - name: 'KEYCLOAK_FRONTEND_URL'
-              value: {{ .Values.keycloak.host | quote }}
-            - name: 'KC_DB_URL_HOST'
-              value: {{ .Values.keycloak.db.host | quote }}
-            - name: 'KC_DB_PASSWORD'
-              value: {{ .Values.keycloak.db.password | quote }}
-            - name: 'KC_DB_USERNAME'
-              value: {{ .Values.keycloak.db.username | quote }}
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: keycloak-secret
-            #       key: KC_DB_PASSWORD
-            # - name: 'KC_DB_USERNAME'
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: keycloak-secret
-            #       key: KC_DB_USERNAME
           ports:
             - name: http
               containerPort: 8080
-          # startupProbe:
-          #   httpGet:
-          #     path: /health/started
-          #     port: 9000
-          # readinessProbe:
-          #   httpGet:
-          #     path: /health/ready
-          #     port: 9000
-          # livenessProbe:
-          #   httpGet:
-          #     path: /health/live
-          #     port: 9000
           resources:
             limits:
               cpu: {{ .Values.keycloak.resources.limits.cpu }}
@@ -120,3 +71,4 @@ spec:
             requests:
               cpu: {{ .Values.keycloak.resources.requests.cpu }}
               memory: {{ .Values.keycloak.resources.requests.memory }}
+{{- end }}
