@@ -53,7 +53,7 @@ ingress:
     healthcheckPort: "status-port"
     healthcheckProtocol: HTTP
     subnetAllowList: ''
-  tlsEnabled: false
+  tlsEnabled: true
   tlsSecretName: keycloak-tls
   host: ''
   path: "/"
@@ -69,7 +69,5 @@ ingress:
     - path: /metrics
       pathType: Prefix
 
-# Les credentials sont gérés via des secrets Kubernetes (keycloak-admin et keycloak-db)
-# Pour les tests, créez les secrets avec :
-# kubectl create secret generic keycloak-admin --from-literal=username=admin --from-literal=password=admin
-# kubectl create secret generic keycloak-db --from-literal=username=keycloak --from-literal=password=keycloak
+secret:
+  enabled: true
