@@ -68,6 +68,3 @@ ingress:
       pathType: Prefix
     - path: /metrics
       pathType: Prefix
-
-secret:
-  enabled: true
