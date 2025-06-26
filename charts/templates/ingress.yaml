@@ -1,4 +1,5 @@
-{{- if .Values.ingress.enabled .Values.keycloak.host}}
+{{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.host }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -27,4 +28,5 @@ spec:
                 name: {{ .Values.ingress.serviceName }}
                 port:
                   number: {{ .Values.ingress.servicePort }}
+{{- end }}
 {{- end }}
