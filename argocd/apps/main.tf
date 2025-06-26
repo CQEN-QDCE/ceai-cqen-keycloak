@@ -20,7 +20,7 @@ locals {
 }
 
 module "ceai_lib" {
-  source = "github.com/CQEN-QDCE/ceai-cqen-terraform-lib?ref=feature/users-postgres"
+  source = "github.com/CQEN-QDCE/ceai-cqen-terraform-lib?ref=v4.1"
 }
 
 
