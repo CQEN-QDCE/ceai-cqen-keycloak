@@ -54,7 +54,7 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
       namespace = "argocd"
       labels = {
         "app.kubernetes.io/name"    = "keycloak-app-of-apps-${terraform.workspace}"
-        "app.kubernetes.io/part-of" = "keycloak-${terraform.workspace}"
+        "app.kubernetes.io/part-of" = var.project_name
       }
     }
     spec = {

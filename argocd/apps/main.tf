@@ -1,7 +1,6 @@
 locals {
   cluster_name          = var.cluster_name
   region                = var.cluster_region
-  application           = "xroad"
   eks_version           = "1.30"
   aws_profile           = var.aws_profile
   environment           = var.workload_account_type
