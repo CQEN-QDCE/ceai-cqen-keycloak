@@ -82,7 +82,7 @@ variable "target_revision" {
 variable "host_path_keycloak" {
   description = "Chemin d'hôte pour Keycloak"
   type        = string
-  default     = "keyclaok-preprod.asea.cqen.ca"
+  default     = "keycloak-preprod.asea.cqen.ca"
 }
 
 variable "replica_count_keycloak" {
