@@ -99,7 +99,7 @@ variable "endpoint_bd_keycloak" {
 variable "keycloak_db_name" {
   description = "Nom de la base de données Keycloak"
   type        = string
-  default     = "keycloak-xroad-default"
+  default     = "keycloak-default"
 }
 
 variable "keycloak_db_admin_user" {
