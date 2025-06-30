@@ -1,0 +1,17 @@
+{{- if .Values.db.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "keycloak.fullname" . }}-postgres
+  labels:
+    app.kubernetes.io/name: {{ include "keycloak.fullname" . }}
+    app.kubernetes.io/component: postgres
+spec:
+  selector:
+    app.kubernetes.io/name: {{ include "keycloak.fullname" . }}
+    app.kubernetes.io/component: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: {{ .Values.db.service.type }}
+{{- end }}
