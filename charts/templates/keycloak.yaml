@@ -21,10 +21,16 @@ spec:
           image: "{{ .Values.keycloak.image }}:{{ .Values.keycloak.imageTag }}"
           args: ["start"]
           env:
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              value: "test"
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              value: "test"
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: KEYCLOAK_ADMIN
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: KEYCLOAK_ADMIN_PASSWORD
             - name: KC_DB
               value: postgres
             - name: KC_DB_URL_HOST
