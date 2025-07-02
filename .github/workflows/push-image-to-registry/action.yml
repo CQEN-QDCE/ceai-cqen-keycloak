@@ -1,0 +1,23 @@
+name: Build and Push to Registry
+
+inputs:
+  ref:
+    description: "La référence (branch, tags) du repo de code où l'image est construite"
+    required: false
+    default: ${{ github.ref }}  
+  version:
+    description: 'Keycloak version to build and push'
+    required: true
+    default: '20.0.1'
+
+runs:
+  using: 'composite'
+  steps:
+    - id: publish-image-to-registry
+      name: Build the image
+      uses: MCN-CQEN/ceai-cqen-commons/actions/publish-image-to-registry@feature/feature/wip-add-params-repo-to-push-image-to-registry
+      with:
+        registry: ghcr.io
+        image-name: ${{ github.repository }}-${{ inputs.version }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        ref: ${{ inputs.ref }}
