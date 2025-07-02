@@ -44,7 +44,7 @@ ingress:
   class: alb
   annotations:
     acmCertificateArn: ''
-    listenPorts: '[{"HTTP":8080}]'
+    listenPorts: '[{"HTTPS":443}]'
     sslRedirect: "443"
     loadBalancerAttributes: 'routing.http.drop_invalid_header_fields.enabled=true'
     scheme: internal
