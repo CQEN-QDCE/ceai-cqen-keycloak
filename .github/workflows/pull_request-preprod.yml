@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout source and target branches
-        uses: actions/checkout@v4
+        uses: actions/checkout
         with:
           fetch-depth: 0  # Required to access both branches
           ref: ${{ github.event.pull_request.head.ref }}
