@@ -48,6 +48,7 @@ jobs:
           chart_path_keycloak="${{ vars.CHART_PATH_KEYCLOAK }}"
           repo_github_url="${{ vars.REPO_GITHUB_URL }}"
           target_revision="${{ vars.TARGET_REVISION }}"
+          acm_certificate_arn="${{ vars.ACM_CERTIFICATE_ARN }}"
           EOF
 
       - name: "Terraform Init (${{ inputs.environment }})"
