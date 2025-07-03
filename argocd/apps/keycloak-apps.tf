@@ -3,13 +3,12 @@
 ################################################################################
 
 resource "random_password" "keycloak_admin_user" {
-  length           = 16
-  special          = true
-  override_special = "!@#%&*"
+  length           = 4
+  special          = false
 }
 
 resource "random_password" "keycloak_admin_password" {
-  length           = 16
+  length           = 18
   special          = true
   override_special = "!@#%&*"
 }
@@ -18,18 +17,6 @@ resource "random_string" "keycloak_secret_name" {
   length  = 16
   special = false
   upper   = false
-}
-
-resource "random_password" "keycloak_db_admin_user" {
-  length           = 16
-  special          = true
-  override_special = "!@#%&*"
-}
-
-resource "random_password" "keycloak_db_admin_password" {
-  length           = 16
-  special          = true
-  override_special = "!@#%&*"
 }
 
 resource "aws_secretsmanager_secret" "keycloak_secret" {
@@ -72,8 +59,8 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
               imageTag     = var.image_tag_keycloak
               replicaCount = var.replica_count_keycloak
               admin = {
-                username = random_password.keycloak_admin_user.result
-                password = random_password.keycloak_admin_password.result
+                username = jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminUser"]
+                password = jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminPassword"]
               }
               db = {
                 username = var.keycloak_db_admin_user
