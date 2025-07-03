@@ -42,6 +42,7 @@ jobs:
           cat > pipeline.auto.tfvars <<EOF
           cluster_name="${{ vars.CLUSTER_NAME }}" 
           cluster_region="${{ vars.CLUSTER_REGION }}"
+          workload_account_type="${{ vars.WORKLOAD_ACCOUNT_TYPE }}"
           project_name="${{ vars.PROJECT_NAME }}"
           host_path_keycloak="${{ vars.HOST_PATH_KEYCLOAK }}"
           replica_count_keycloak="${{ vars.REPLICA_COUNT_KEYCLOAK }}"
