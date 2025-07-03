@@ -31,7 +31,7 @@ jobs:
       - name: "Validate Terraform apps argocd (${{ inputs.environment }})"
         id: common-infra-validate
         #uses: ./.github/workflows/common/infra/validate
-        uses: MCN-CQEN/ceai-cqen-commons/actions/infra-validate-tf@main
+        uses: MCN-CQEN/ceai-cqen-commons/actions/infra-validate-tf@feature/add-validate-tf-scripts
         with:
           working_directory: ./argocd/apps
           environment: ${{ inputs.environment }}
