@@ -19,7 +19,7 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - name: "Git clone the repository (${{ inputs.environment }})"
-        uses: acti  ons/checkout@v4
+        uses: actions/checkout@v4
 
       - name: "configure aws credentials (${{ inputs.environment }})"
         uses: aws-actions/configure-aws-credentials@v4
