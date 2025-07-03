@@ -63,12 +63,7 @@ jobs:
           repo_github_url="${{ vars.REPO_GITHUB_URL }}"
           target_revision="${{ vars.TARGET_REVISION }}"
           EOF
-
-      - name: "Terraform Init (${{ inputs.environment }})"
-        working-directory: ./argocd/apps
-        run: terraform init -backend-config="bucket=${{ vars.BACKEND_BUCKET }}"
-      
-      
+       
       - name: "Terraform Refresh (${{ inputs.environment }})"
         working-directory: ./argocd/apps
         run: |
