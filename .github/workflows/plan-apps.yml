@@ -28,12 +28,23 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: "Terraform Setup (${{ inputs.environment }})"
-        uses: hashicorp/setup-terraform@v3
-
-      - name: "Terraform Format (${{ inputs.environment }})"
-        working-directory: ./argocd/apps
-        run: terraform fmt -check -recursive -diff
+      - name: "Validate Terraform apps argocd (${{ inputs.environment }})"
+        id: common-infra-validate
+        #uses: ./.github/workflows/common/infra/validate
+        uses: MCN-CQEN/ceai-cqen-commons/actions/infra-validate-tf@main
+        with:
+          working_directory: ./argocd/apps
+          environment: ${{ inputs.environment }}
+          bucket_tf_state: ${{ vars.BACKEND_BUCKET }}
+          role_to_assume: ${{ secrets.ASSUME_ROLE_ARN }}
+          checkov_ignore_list: "BC_CROSS_1,BC_AWS_GENERAL_192,CKV_AWS_283,BC_CROSS_2,CKV2_AWS_8,CKV2_AWS_27,CKV_AWS_149,CKV_AWS_162"
+      
+      - name: "Print Terraform validate output (${{ inputs.environment }})"
+        run: |
+          echo "Terraform validate output: ${{ steps.common-infra-validate.outputs.terraform_validate }}"
+          echo "Terraform fmt output: ${{ steps.common-infra-validate.outputs.terraform_fmt }}"
+          echo "Terraform init output: ${{ steps.common-infra-validate.outputs.terraform_init }}"
+          echo "Checkov output: ${{ steps.common-infra-validate.outputs.checkov }}"
 
       - name: "Setup terraform variables (${{ inputs.environment }})"
         working-directory: ./argocd/apps
@@ -56,20 +67,7 @@ jobs:
       - name: "Terraform Init (${{ inputs.environment }})"
         working-directory: ./argocd/apps
         run: terraform init -backend-config="bucket=${{ vars.BACKEND_BUCKET }}"
-
-      - name: "Terraform Validate (${{ inputs.environment }})"
-        working-directory: ./argocd/apps
-        id: validate
-        run: terraform validate
       
-      - name: Test with Checkov
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: ./argocd/apps
-          framework: terraform 
-          skip_check: BC_CROSS_1,BC_CROSS_2,BC_AWS_GENERAL_192,CKV_AWS_149
-          output_format: json
       
       - name: "Terraform Refresh (${{ inputs.environment }})"
         working-directory: ./argocd/apps
