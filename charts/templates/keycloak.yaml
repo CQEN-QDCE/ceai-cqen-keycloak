@@ -22,9 +22,15 @@ spec:
           args: ["start"]
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
-              value: "test"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: KEYCLOAK_ADMIN
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
-              value: "test"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: KEYCLOAK_ADMIN_PASSWORD
             - name: KC_DB
               value: postgres
             - name: KC_DB_URL_HOST
