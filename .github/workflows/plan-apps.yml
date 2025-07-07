@@ -1,0 +1,89 @@
+name: Validation Terraform & Plan de apps keycloak dans argocd
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+env:
+  AWS_REGION : "ca-central-1"
+# Permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: "Git clone the repository (${{ inputs.environment }})"
+        uses: actions/checkout@v4
+
+      - name: "configure aws credentials (${{ inputs.environment }})"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ASSUME_ROLE_ARN }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: "Validate Terraform apps argocd (${{ inputs.environment }})"
+        id: common-infra-validate
+        #uses: ./.github/workflows/common/infra/validate
+        uses: MCN-CQEN/ceai-cqen-commons/actions/infra-validate-tf@feature/add-validate-tf-scripts
+        with:
+          working_directory: ./argocd/apps
+          environment: ${{ inputs.environment }}
+          bucket_tf_state: ${{ vars.BACKEND_BUCKET }}
+          role_to_assume: ${{ secrets.ASSUME_ROLE_ARN }}
+          checkov_ignore_list: "BC_CROSS_1,BC_AWS_GENERAL_192,CKV_AWS_283,BC_CROSS_2,CKV2_AWS_8,CKV2_AWS_27,CKV_AWS_149,CKV_AWS_162"
+      
+      - name: "Print Terraform validate output (${{ inputs.environment }})"
+        run: |
+          echo "Terraform validate output: ${{ steps.common-infra-validate.outputs.terraform_validate }}"
+          echo "Terraform fmt output: ${{ steps.common-infra-validate.outputs.terraform_fmt }}"
+          echo "Terraform init output: ${{ steps.common-infra-validate.outputs.terraform_init }}"
+          echo "Checkov output: ${{ steps.common-infra-validate.outputs.checkov }}"
+
+      - name: "Setup terraform variables (${{ inputs.environment }})"
+        working-directory: ./argocd/apps
+        id: vars
+        run: |-
+          cat > pipeline.auto.tfvars <<EOF
+          cluster_name="${{ vars.CLUSTER_NAME }}" 
+          cluster_region="${{ vars.CLUSTER_REGION }}"
+          workload_account_type="${{ vars.WORKLOAD_ACCOUNT_TYPE }}"
+          project_name="${{ vars.PROJECT_NAME }}"
+          host_path_keycloak="${{ vars.HOST_PATH_KEYCLOAK }}"
+          replica_count_keycloak="${{ vars.REPLICA_COUNT_KEYCLOAK }}"
+          server_image_keycloak="${{ vars.SERVER_IMAGE_KEYCLOAK }}"
+          image_tag_keycloak="${{ vars.IMAGE_TAG_KEYCLOAK }}"
+          chart_path_keycloak="${{ vars.CHART_PATH_KEYCLOAK }}"
+          repo_github_url="${{ vars.REPO_GITHUB_URL }}"
+          target_revision="${{ vars.TARGET_REVISION }}"
+          EOF
+       
+      - name: "Terraform Refresh (${{ inputs.environment }})"
+        working-directory: ./argocd/apps
+        run: |
+            terraform refresh \
+                -var-file='pipeline.auto.tfvars' \
+                -var endpoint_bd_keycloak="${{ secrets.ENDPOINT_BD_KEYCLOAK }}" \
+                -var keycloak_db_name="${{ secrets.KEYCLOAK_DB_NAME }}" \
+                -var keycloak_db_admin_user="${{ secrets.KEYCLOAK_DB_ADMIN_USER }}" \
+                -var keycloak_db_admin_password="${{ secrets.KEYCLOAK_DB_ADMIN_PASSWORD }}" \
+                -var assume_role_arn="${{ secrets.ASSUME_ROLE_ARN }}" \
+                -var acm_certificate_arn="${{ secrets.ACM_CERTIFICATE_ARN }}"
+
+      - name: "Terraform Plan (${{ inputs.environment }})"
+        working-directory: ./argocd/apps
+        run: |
+            terraform plan \
+                -var-file='pipeline.auto.tfvars' \
+                -var endpoint_bd_keycloak="${{ secrets.ENDPOINT_BD_KEYCLOAK }}" \
+                -var keycloak_db_name="${{ secrets.KEYCLOAK_DB_NAME }}" \
+                -var keycloak_db_admin_user="${{ secrets.KEYCLOAK_DB_ADMIN_USER }}" \
+                -var keycloak_db_admin_password="${{ secrets.KEYCLOAK_DB_ADMIN_PASSWORD }}" \
+                -var assume_role_arn="${{ secrets.ASSUME_ROLE_ARN }}" \
+                -var acm_certificate_arn="${{ secrets.ACM_CERTIFICATE_ARN }}"

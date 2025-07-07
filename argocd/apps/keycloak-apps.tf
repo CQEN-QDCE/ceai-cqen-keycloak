@@ -3,8 +3,8 @@
 ################################################################################
 
 resource "random_password" "keycloak_admin_user" {
-  length           = 4
-  special          = false
+  length  = 4
+  special = false
 }
 
 resource "random_password" "keycloak_admin_password" {
