@@ -9,6 +9,7 @@ on:
 
 env:
   AWS_REGION : "ca-central-1"
+  TF_WORKSPACE: ${{ inputs.environment }}
 # Permission can be added at job level or workflow level    
 permissions:
       id-token: write   # This is required for requesting the JWT
@@ -27,6 +28,10 @@ jobs:
           role-to-assume: ${{ secrets.ASSUME_ROLE_ARN }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
+          
+      - name: "Setup Terraform workspace (${{ inputs.environment }})"
+        working-directory: ./argocd/apps
+        run: terraform workspace select ${{ env.TF_WORKSPACE }} || terraform workspace new ${{ env.TF_WORKSPACE }}
 
       - name: "Validate Terraform apps argocd (${{ inputs.environment }})"
         id: common-infra-validate
