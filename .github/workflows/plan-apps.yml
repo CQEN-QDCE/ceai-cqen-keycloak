@@ -39,18 +39,15 @@ jobs:
           bucket_tf_state: ${{ vars.BACKEND_BUCKET }}
           role_to_assume: ${{ secrets.ASSUME_ROLE_ARN }}
           checkov_ignore_list: "BC_CROSS_1,BC_AWS_GENERAL_192,CKV_AWS_283,BC_CROSS_2,CKV2_AWS_8,CKV2_AWS_27,CKV_AWS_149,CKV_AWS_162"
-      
-      - name: "Setup Terraform workspace (${{ inputs.environment }})"
-        working-directory: ./argocd/apps
-        run: terraform workspace select ${{ env.TF_WORKSPACE }} || terraform workspace new ${{ env.TF_WORKSPACE }}
-        
+
+
       - name: "Print Terraform validate output (${{ inputs.environment }})"
         run: |
           echo "Terraform validate output: ${{ steps.common-infra-validate.outputs.terraform_validate }}"
           echo "Terraform fmt output: ${{ steps.common-infra-validate.outputs.terraform_fmt }}"
           echo "Terraform init output: ${{ steps.common-infra-validate.outputs.terraform_init }}"
           echo "Checkov output: ${{ steps.common-infra-validate.outputs.checkov }}"
-
+        
       - name: "Setup terraform variables (${{ inputs.environment }})"
         working-directory: ./argocd/apps
         id: vars
@@ -83,6 +80,8 @@ jobs:
                 -var github_app_id="${{ secrets.GH_APP_ID }}" \
                 -var github_app_installation_id="${{ secrets.GH_APP_INSTALLATION_ID }}" \
                 -var github_app_private_key="${{ secrets.GH_APP_PRIVATE_KEY }}"
+        env:
+          TF_WORKSPACE: ${{ inputs.environment }}
 
       - name: "Terraform Plan (${{ inputs.environment }})"
         working-directory: ./argocd/apps
@@ -98,3 +97,5 @@ jobs:
                 -var github_app_id="${{ secrets.GH_APP_ID }}" \
                 -var github_app_installation_id="${{ secrets.GH_APP_INSTALLATION_ID }}" \
                 -var github_app_private_key="${{ secrets.GH_APP_PRIVATE_KEY }}" \
+        env:
+          TF_WORKSPACE: ${{ inputs.environment }}
