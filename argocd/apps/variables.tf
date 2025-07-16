@@ -76,7 +76,7 @@ variable "repo_github_url" {
 variable "target_revision" {
   description = "Révision cible du dépôt pour Keycloak"
   type        = string
-  default     = "feature/helmcharts"
+  default     = "main"
 }
 
 variable "host_path_keycloak" {
@@ -110,4 +110,23 @@ variable "keycloak_db_admin_user" {
 variable "keycloak_db_admin_password" {
   description = "Mot de passe administrateur de la base de données Keycloak"
   type        = string
+  sensitive   = true
+}
+
+variable "github_app_id" {
+  description = "GitHub App ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_app_installation_id" {
+  description = "GitHub App Installation ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_app_private_key" {
+  description = "GitHub App Private Key"
+  type        = string
+  sensitive   = true
 }

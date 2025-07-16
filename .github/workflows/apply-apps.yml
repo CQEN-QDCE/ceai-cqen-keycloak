@@ -65,4 +65,9 @@ jobs:
                 -var keycloak_db_admin_password="${{ secrets.KEYCLOAK_DB_ADMIN_PASSWORD }}" \
                 -var assume_role_arn="${{ secrets.ASSUME_ROLE_ARN }}"  \
                 -var acm_certificate_arn="${{ secrets.ACM_CERTIFICATE_ARN }}" \
+                -var github_app_id="${{ secrets.GH_APP_ID }}" \
+                -var github_app_installation_id="${{ secrets.GH_APP_INSTALLATION_ID }}" \
+                -var github_app_private_key="${{ secrets.GH_APP_PRIVATE_KEY }}" \
                 -auto-approve
+        env:
+          TF_WORKSPACE: ${{ inputs.environment }}
