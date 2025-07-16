@@ -95,3 +95,28 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
   }
   depends_on = [aws_secretsmanager_secret_version.keycloak_secret_version]
 }
+
+resource "kubernetes_manifest" "keycloak_github_app_secret" {
+  manifest = {
+    apiVersion = "v1"
+    kind       = "Secret"
+    metadata = {
+      name      = "keycloak-repo-github-app-${terraform.workspace}"
+      namespace = "argocd"
+      labels = {
+        "argocd.argoproj.io/secret-type" = "repository"
+      }
+    }
+    type = "Opaque"
+    data = {
+      url                     = base64encode(var.repo_github_url)
+      type                    = base64encode("git")
+      githubAppID             = base64encode(var.github_app_id)
+      githubAppInstallationID = base64encode(var.github_app_installation_id)
+      githubAppPrivateKey     = base64encode(var.github_app_private_key)
+      project                 = base64encode(var.project_name)
+    }
+  }
+}
+
+
