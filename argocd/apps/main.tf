@@ -22,7 +22,6 @@ module "ceai_lib" {
   source = "github.com/CQEN-QDCE/ceai-cqen-terraform-lib?ref=v4.1"
 }
 
-
 module "sea_network" {
   source = "./.terraform/modules/ceai_lib/aws/sea-network"
 
