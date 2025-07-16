@@ -2,9 +2,8 @@ name: Pull Request Validation Terraform Dev
 
 on:
     pull_request:
-        types: [opened, reopened]
+        types: [closed]
         branches:
-            - 'feature/*'
             - 'main'
 
 env:
@@ -42,7 +41,7 @@ jobs:
   Terraform-and-apply-argocd:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.argocd-changes == 'true' }}
-    uses: ./.github/workflows/plan-apps.yml
+    uses: ./.github/workflows/apply-apps.yml
     secrets: inherit
     with:
       environment: preprod
