@@ -118,5 +118,3 @@ resource "kubernetes_manifest" "keycloak_github_app_secret" {
     }
   }
 }
-
-
