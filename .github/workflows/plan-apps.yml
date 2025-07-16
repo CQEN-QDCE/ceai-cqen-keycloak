@@ -28,12 +28,8 @@ jobs:
           role-to-assume: ${{ secrets.ASSUME_ROLE_ARN }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
-          
-      - name: "Setup Terraform workspace (${{ inputs.environment }})"
-        working-directory: ./argocd/apps
-        run: terraform workspace select ${{ env.TF_WORKSPACE }} || terraform workspace new ${{ env.TF_WORKSPACE }}
 
-      - name: "Validate Terraform apps argocd (${{ inputs.environment }})"
+      - name: "Validate Terraform apps (${{ inputs.environment }})"
         id: common-infra-validate
         #uses: ./.github/workflows/common/infra/validate
         uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/infra-validate-tf@main
@@ -44,6 +40,10 @@ jobs:
           role_to_assume: ${{ secrets.ASSUME_ROLE_ARN }}
           checkov_ignore_list: "BC_CROSS_1,BC_AWS_GENERAL_192,CKV_AWS_283,BC_CROSS_2,CKV2_AWS_8,CKV2_AWS_27,CKV_AWS_149,CKV_AWS_162"
       
+      - name: "Setup Terraform workspace (${{ inputs.environment }})"
+        working-directory: ./argocd/apps
+        run: terraform workspace select ${{ env.TF_WORKSPACE }} || terraform workspace new ${{ env.TF_WORKSPACE }}
+        
       - name: "Print Terraform validate output (${{ inputs.environment }})"
         run: |
           echo "Terraform validate output: ${{ steps.common-infra-validate.outputs.terraform_validate }}"
