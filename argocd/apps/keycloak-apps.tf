@@ -96,6 +96,7 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
   depends_on = [aws_secretsmanager_secret_version.keycloak_secret_version]
 }
 
+
 resource "kubernetes_manifest" "keycloak_github_app_secret" {
   manifest = {
     apiVersion = "v1"
