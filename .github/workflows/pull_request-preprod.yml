@@ -28,6 +28,11 @@ jobs:
       - name: Fetch target branch
         run: git fetch origin ${{ github.event.pull_request.base.ref }}
 
+      - name: Debug git diff and output
+        run: |
+          echo "Files changed in PR:"
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }}
+
       - name: Check changes in argocd directory
         id: check-argocd-changes
         run: |
