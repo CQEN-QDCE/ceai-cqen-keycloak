@@ -31,7 +31,6 @@ jobs:
       - name: Debug git diff and output
         run: |
           echo "Files changed in PR:"
-          git diff --name-only origin/${{ github.event.pull_request.base.ref }}  origin/${{ github.event.pull_request.head.ref }}
           git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }}
 
       - name: Check changes in argocd directory
@@ -42,7 +41,6 @@ jobs:
           else
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
-          echo "::set-output name=changes::$(cat $GITHUB_OUTPUT | grep changes | cut -d '=' -f2)"
 
   Validation-Terraform-and-plan-argocd:
     needs: detect-changes
