@@ -32,7 +32,7 @@ jobs:
       - name: Check changes in argocd directory
         id: check-argocd-changes
         run: |
-          if git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} | grep -q "argocd/apps/"; then
+          if git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }} | grep "argocd/apps/"; then
             echo "changes=true" >> $GITHUB_OUTPUT
           else
             echo "changes=false" >> $GITHUB_OUTPUT
