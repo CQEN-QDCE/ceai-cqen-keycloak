@@ -64,6 +64,7 @@ jobs:
           chart_path_keycloak="${{ vars.CHART_PATH_KEYCLOAK }}"
           repo_github_url="${{ vars.REPO_GITHUB_URL }}"
           target_revision="${{ vars.TARGET_REVISION }}"
+          repo_github_image_url="${{ vars.REPO_GITHUB_IMAGE_URL }}"
           EOF
        
       - name: "Terraform Refresh (${{ inputs.environment }})"
@@ -79,7 +80,7 @@ jobs:
                 -var acm_certificate_arn="${{ secrets.ACM_CERTIFICATE_ARN }}" \
                 -var github_app_id="${{ secrets.GH_APP_ID }}" \
                 -var github_app_installation_id="${{ secrets.GH_APP_INSTALLATION_ID }}" \
-                -var github_app_private_key="${{ secrets.GH_APP_PRIVATE_KEY }}"
+                -var github_app_private_key="${{ secrets.GH_APP_PRIVATE_KEY }}" \
         env:
           TF_WORKSPACE: ${{ inputs.environment }}
 
