@@ -28,14 +28,21 @@ jobs:
       - name: Fetch target branch
         run: git fetch origin ${{ github.event.pull_request.base.ref }}
 
+      - name: Debug git diff and output
+        run: |
+          echo "Files changed in PR:"
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }}  origin/${{ github.event.pull_request.head.ref }}
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }}
+
       - name: Check changes in argocd directory
         id: check-argocd-changes
         run: |
-          if git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }} | grep "argocd/apps/"; then
+          if git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} | grep -q "argocd/apps/"; then
             echo "changes=true" >> $GITHUB_OUTPUT
           else
             echo "changes=false" >> $GITHUB_OUTPUT
           fi
+          echo "::set-output name=changes::$(cat $GITHUB_OUTPUT | grep changes | cut -d '=' -f2)"
 
   Validation-Terraform-and-plan-argocd:
     needs: detect-changes
