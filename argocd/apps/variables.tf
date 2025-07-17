@@ -130,3 +130,8 @@ variable "github_app_private_key" {
   type        = string
   sensitive   = true
 }
+
+variable "repo_github_image_url" {
+  description = "URL du dépôt GitHub pour l'image de Keycloak"
+  type        = string
+}

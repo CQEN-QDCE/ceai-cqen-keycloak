@@ -110,7 +110,7 @@ resource "kubernetes_manifest" "keycloak_github_app_secret" {
     }
     type = "Opaque"
     data = {
-      url                     = base64encode(var.repo_github_url)
+      url                     = base64encode(var.repo_github_image_url)
       type                    = base64encode("git")
       githubAppID             = base64encode(var.github_app_id)
       githubAppInstallationID = base64encode(var.github_app_installation_id)

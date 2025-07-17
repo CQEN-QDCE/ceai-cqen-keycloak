@@ -48,6 +48,7 @@ jobs:
           chart_path_keycloak="${{ vars.CHART_PATH_KEYCLOAK }}"
           repo_github_url="${{ vars.REPO_GITHUB_URL }}"
           target_revision="${{ vars.TARGET_REVISION }}"
+          repo_github_image_url="${{ vars.REPO_GITHUB_IMAGE_URL }}"
           EOF
 
       - name: "Terraform Init (${{ inputs.environment }})"
