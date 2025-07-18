@@ -1,3 +1,6 @@
+imagePullSecrets:
+  name: ghcr-auth
+
 keycloak:
   enabled: true
   image: quay.io/keycloak/keycloak

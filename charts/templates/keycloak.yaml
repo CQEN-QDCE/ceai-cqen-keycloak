@@ -16,9 +16,14 @@ spec:
       labels:
         app: keycloak
     spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets.name | nindent 8 }}
+      {{- end }}
       containers:
         - name: keycloak
           image: "{{ .Values.keycloak.image }}:{{ .Values.keycloak.imageTag }}"
+          pullPolicy: Always
           args: ["start"]
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
