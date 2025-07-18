@@ -18,7 +18,7 @@ spec:
     spec:
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml .Values.imagePullSecrets.name | nindent 8 }}
+        "{{ .Values.imagePullSecrets.name | nindent 8 }}"
       {{- end }}
       containers:
         - name: keycloak
