@@ -119,3 +119,50 @@ resource "kubernetes_manifest" "keycloak_github_app_secret" {
     }
   }
 }
+
+resource "kubernetes_manifest" "keycloak_github_app_secret" {
+  manifest = {
+    apiVersion = "v1"
+    kind       = "Secret"
+    metadata = {
+      name      = "github-registry-credentials-${terraform.workspace}"
+      namespace = "argocd"
+      labels = {
+        "argocd.argoproj.io/secret-type" = "repository"
+      }
+    }
+    type = "Opaque"
+    data = {
+      url                     = base64encode(var.repo_github_image_url)
+      type                    = base64encode("kubernetes.io/dockerconfigjson")
+      githubAppID             = base64encode(var.github_app_id)
+      githubAppInstallationID = base64encode(var.github_app_installation_id)
+      githubAppPrivateKey     = base64encode(var.github_app_private_key)
+      project                 = base64encode(var.project_name)
+    }
+  }
+}
+
+
+resource "kubernetes_secret" "ghcr_dockerconfig" {
+  metadata {
+    name      = "github-registry-credentials"
+    namespace = var.project_name
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = base64encode(
+      jsonencode({
+        auths = {
+          "ghcr.io" = {
+            username = var.ghcr_username
+            password = var.ghcr_pat
+            auth     = base64encode("${var.ghcr_username}:${var.ghcr_pat}")
+          }
+        }
+      })
+    )
+  }
+}
