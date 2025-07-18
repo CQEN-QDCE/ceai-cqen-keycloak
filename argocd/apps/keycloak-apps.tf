@@ -131,6 +131,8 @@ resource "kubernetes_secret" "ghcr_auth" {
       "auths" = {
         "https://ghcr.io" = {
           "auth" : base64encode("${var.ghcr_username}:${var.ghcr_pat}")
+          "username" : base64encode("${var.ghcr_username}")
+          "password" : base64encode("${var.ghcr_pat}")
         }
       }
     })
