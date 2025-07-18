@@ -119,3 +119,27 @@ resource "kubernetes_manifest" "keycloak_github_app_secret" {
     }
   }
 }
+
+
+resource "kubernetes_secret" "ghcr_dockerconfig" {
+  metadata {
+    name      = "github-registry-credentials"
+    namespace = var.project_name
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = base64encode(
+      jsonencode({
+        auths = {
+          "ghcr.io" = {
+            username = var.ghcr_username
+            password = var.ghcr_pat
+            auth     = base64encode("${var.ghcr_username}:${var.ghcr_pat}")
+          }
+        }
+      })
+    )
+  }
+}

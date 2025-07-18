@@ -135,3 +135,15 @@ variable "repo_github_image_url" {
   description = "URL du dépôt GitHub pour l'image de Keycloak"
   type        = string
 }
+
+variable "ghcr_username" {
+  description = "Nom d'utilisateur pour GitHub Container Registry"
+  type        = string
+  sensitive   = true
+}
+
+variable "ghcr_pat" {
+  description = "Personal Access Token pour GitHub Container Registry"
+  type        = string
+  sensitive   = true
+}
