@@ -63,7 +63,7 @@ spec:
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_PROXY_HEADERS
-              value: "forwarded"
+              value: "xforwarded"
             - name: JGROUPS_DISCOVERY_PROTOCOL
               value: "JDBC_PING"
             - name: ENV
