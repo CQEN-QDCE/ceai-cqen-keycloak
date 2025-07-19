@@ -26,12 +26,12 @@ spec:
           pullPolicy: Always
           args: ["start"]
           env:
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+            - name: KEYCLOAK_ADMIN
               valueFrom:
                 secretKeyRef:
                   name: keycloak-secret
                   key: KEYCLOAK_ADMIN
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+            - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: keycloak-secret
@@ -66,6 +66,8 @@ spec:
               value: "forwarded"
             - name: JGROUPS_DISCOVERY_PROTOCOL
               value: "JDBC_PING"
+            - name: ENV
+              value: "prod"
             - name: JGROUPS_DISCOVERY_PROPERTIES
               value: "datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500"
           ports:
