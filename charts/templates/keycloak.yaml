@@ -58,10 +58,12 @@ spec:
               value: "true"
             - name: KC_METRICS_ENABLED
               value: "true"
+            - name: KC_FEATURES
+              value: "token-exchange"
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_PROXY_HEADERS
-              value: "xforwarded"
+              value: "forwarded"
             - name: JGROUPS_DISCOVERY_PROTOCOL
               value: "JDBC_PING"
             - name: JGROUPS_DISCOVERY_PROPERTIES
