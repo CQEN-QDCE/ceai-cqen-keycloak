@@ -59,8 +59,8 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
               imageTag     = var.image_tag_keycloak
               replicaCount = var.replica_count_keycloak
               admin = {
-                username = jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminUser"]
-                password = jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminPassword"]
+                username = sensitive(jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminUser"])
+                password = sensitive(jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminPassword"])
               }
               db = {
                 username = var.keycloak_db_admin_user
