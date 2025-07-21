@@ -48,7 +48,7 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
       project = var.project_name
       source = {
         repoURL        = var.repo_github_url
-        targetRevision = "feautre/private-ghcr"
+        targetRevision = var.target_revision
         path           = var.chart_path_keycloak
 
         helm = {
@@ -96,7 +96,6 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
   depends_on = [aws_secretsmanager_secret_version.keycloak_secret_version]
 }
 
-
 resource "kubernetes_manifest" "keycloak_github_app_secret" {
   manifest = {
     apiVersion = "v1"
@@ -120,30 +119,9 @@ resource "kubernetes_manifest" "keycloak_github_app_secret" {
   }
 }
 
-# resource "kubernetes_secret" "ghcr_auth" {
-#   metadata {
-#     name      = "ghcr-auth"
-#     namespace = var.project_name
-#   }
-#   type = "kubernetes.io/dockerconfigjson"
-#   data = {
-#     ".dockerconfigjson" = jsonencode({
-#       auths = {
-#         "ghcr.io" = {
-#           "username" = "${var.ghcr_username}"
-#           "password" = "${var.ghcr_pat}" # Docker Personal Access token scoped to read packages only
-#           "email"    = "pierre.jiji@mcn.gouv.qc.ca"
-#           "auth"     = base64encode("${var.ghcr_username}:${var.ghcr_pat}")
-#         }
-#       }
-#     })
-#   }
-# }
-
-
 resource "kubernetes_secret" "ghcr_auth" {
   metadata {
-    name = "ghcr-auth"
+    name      = "ghcr-auth"
     namespace = var.project_name
   }
   type = "kubernetes.io/dockerconfigjson"
@@ -151,7 +129,7 @@ resource "kubernetes_secret" "ghcr_auth" {
     ".dockerconfigjson" = jsonencode({
       "auths" = {
         "https://ghcr.io" = {
-          "auth" :  base64encode("${var.ghcr_username}:${var.ghcr_pat}")
+          "auth" : base64encode("${var.ghcr_username}:${var.ghcr_pat}")
         }
       }
     })
