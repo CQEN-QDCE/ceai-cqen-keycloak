@@ -59,8 +59,8 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
               imageTag     = var.image_tag_keycloak
               replicaCount = var.replica_count_keycloak
               admin = {
-                username = jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminUser"]
-                password = jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminPassword"]
+                username = sensitive(jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminUser"])
+                password = sensitive(jsondecode(aws_secretsmanager_secret_version.keycloak_secret_version.secret_string)["adminPassword"])
               }
               db = {
                 username = var.keycloak_db_admin_user
@@ -96,7 +96,6 @@ resource "kubernetes_manifest" "keycloak_app_of_apps" {
   depends_on = [aws_secretsmanager_secret_version.keycloak_secret_version]
 }
 
-
 resource "kubernetes_manifest" "keycloak_github_app_secret" {
   manifest = {
     apiVersion = "v1"
@@ -130,9 +129,7 @@ resource "kubernetes_secret" "ghcr_auth" {
     ".dockerconfigjson" = jsonencode({
       "auths" = {
         "https://ghcr.io" = {
-          "auth" : "${var.ghcr_username}:${var.ghcr_pat}"
-          "username" : "${var.ghcr_username}"
-          "password" : "${var.ghcr_pat}"
+          "auth" : base64encode("${var.ghcr_username}:${var.ghcr_pat}")
         }
       }
     })
