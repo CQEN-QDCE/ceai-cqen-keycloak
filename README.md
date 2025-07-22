@@ -76,7 +76,7 @@ Le port de gestion peut être configuré sur 9000.
 Démarrer le conteneur de développement en spécifiant un port de gestion:
 
 ```
-docker run -p 8080:8080 -p 9000:9000 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -e ENV=dev -e KC_HTTP_MANAGEMENT_PORT=9000 -e KC_HEALTH_ENABLED=true -e KC_METRICS_ENABLED=true keycloak_image:dev start-dev
+docker run -p 8080:8080 -p 9000:9000 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -e ENV=dev -e KC_HTTP_MANAGEMENT_PORT=9000 -e KC_HEALTH_ENABLED=true -e KC_METRICS_ENABLED=true keycloak_image:dev start-dev
 ```
 
 Vous pouvez utiliser les commandes suivantes pour interroger l'état du serveur et l'obtention de métriques :
@@ -103,8 +103,8 @@ http://localhost:8080
 
 | Nom                           | Description                                                   |
 | ----------------------------  | ------------------------------------------------------------- |
-| `KEYCLOAK_ADMIN`              | Nom d'utilisateur administrateur initial                                 |
-| `KEYCLOAK_ADMIN_PASSWORD`     | Mot de passe administrateur initial
+| `KC_BOOTSTRAP_ADMIN_USERNAME`              | Nom d'utilisateur administrateur initial                                 |
+| `KC_BOOTSTRAP_ADMIN_PASSWORD`     | Mot de passe administrateur initial
 | `KC_DB`                       | Le fournisseur de base de données..
 | `KC_DB_URL`                   | L'URL JDBC complète de la base de données.
 | `KC_HOSTNAME`                 | Adresse à laquelle le serveur est exposé.
