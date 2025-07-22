@@ -1,9 +1,9 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION=25.0.6
+ARG IMG_VERSION=26.3.1
 ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
-FROM registry.access.redhat.com/ubi9 as ubi-micro-build
+FROM registry.access.redhat.com/ubi9 AS ubi-micro-build
 # Création d'un système de fichiers racine pour les installations
 RUN mkdir -p /mnt/rootfs
 # Installation de util-linux et curl-minimal dans le système de fichiers racine, sans documentation pour réduire la taille
@@ -12,7 +12,7 @@ RUN dnf install --installroot /mnt/rootfs util-linux curl-minimal --releasever 9
     rpm --root /mnt/rootfs -e --nodeps setup
 
 # Construction des modules de Keycloak
-FROM docker.io/maven:3-amazoncorretto-17 as providers-builder
+FROM docker.io/maven:3-amazoncorretto-17 AS providers-builder
 
 COPY ./providers ./providers
 
@@ -21,7 +21,7 @@ RUN mvn -f ./providers/2fa-email-authenticator/pom.xml clean package
 # Ajouter les nouveaux modules ici
 
 # Construction optimisée de l'exécutable Keycloak
-FROM quay.io/keycloak/keycloak:${IMG_VERSION} as builder
+FROM quay.io/keycloak/keycloak:${IMG_VERSION} AS builder
 ARG IMG_VERSION
 ARG ENV
 
@@ -48,10 +48,10 @@ COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/tar
 WORKDIR /opt/keycloak
 
 # Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
-RUN /opt/keycloak/bin/kc.sh build --health-enabled=true --metrics-enabled=true --features=preview
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true --metrics-enabled=true --features=token-exchange
 
 # Étape finale de création de l'image Keycloak
-FROM quay.io/keycloak/keycloak:${IMG_VERSION} as keycloak
+FROM quay.io/keycloak/keycloak:${IMG_VERSION} AS keycloak
 ARG IMG_VERSION
 ARG ENV
 
