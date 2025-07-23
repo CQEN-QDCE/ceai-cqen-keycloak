@@ -26,6 +26,6 @@ module "sea_network" {
   source = "./.terraform/modules/ceai_lib/aws/sea-network"
 
   aws_profile           = local.aws_profile
-  workload_account_type = local.environment 
+  workload_account_type = local.environment
 
 }
