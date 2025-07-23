@@ -27,5 +27,4 @@ module "sea_network" {
 
   aws_profile           = local.aws_profile
   workload_account_type = local.environment
-
 }
