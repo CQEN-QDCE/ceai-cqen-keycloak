@@ -15,7 +15,7 @@ Une image docker contenant un fichier JSON d'import de realm est alors produite 
 À partir d'un conteneur docker contenant le realm nécéssaire au projet.
 
 ```bash
-docker run -d --name keycloak -p 8080:8080 -e KEYCLOAK_USER=$KEYCLOAK_ADMIN_USER -e KEYCLOAK_PASSWORD=$KEYCLOAK_ADMIN_PASS quay.io/keycloak/keycloak 
+docker run -d --name keycloak -p 8080:8080 -e KEYCLOAK_USER=$KC_BOOTSTRAP_ADMIN_USERNAME -e KEYCLOAK_PASSWORD=$KC_BOOTSTRAP_ADMIN_PASSWORD quay.io/keycloak/keycloak 
 ```
 Configurer le realm à l'aide de la console web.
 
@@ -31,8 +31,8 @@ docker stop keycloak
 ```
 Démarrer le conteneur "snapshot" avec un point de montage ouvert en écriture. Assurez-vous d'avoir un répertoire /tmp dans votre répertoire en cours $(pwd).
 ```bash
-docker run -d -p 8080:8080 -e KEYCLOAK_USER=$KEYCLOAK_ADMIN_USER-e \
-KEYCLOAK_PASSWORD=$KEYCLOAK_ADMIN_PASS -v $(pwd)/tmp:/tmp:z --name keycloak_snapshot -h keycloak  \
+docker run -d -p 8080:8080 -e KEYCLOAK_USER=$KC_BOOTSTRAP_ADMIN_USERNAME-e \
+KEYCLOAK_PASSWORD=$KC_BOOTSTRAP_ADMIN_PASSWORD -v $(pwd)/tmp:/tmp:z --name keycloak_snapshot -h keycloak  \
 keycloak_snapshot
 ```
 Lancer le script d'export sur le conteneur "snapshot". Dans l'exemple, on exporte le realm example vers le fichier tmp/example_realm.json
