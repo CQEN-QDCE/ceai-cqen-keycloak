@@ -30,12 +30,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: keycloak-secret
-                  key: KEYCLOAK_ADMIN
+                  key: KC_BOOTSTRAP_ADMIN_USERNAME
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: keycloak-secret
-                  key: KEYCLOAK_ADMIN_PASSWORD
+                  key: KC_BOOTSTRAP_ADMIN_PASSWORD
             - name: KC_DB
               value: postgres
             - name: KC_DB_URL_HOST
