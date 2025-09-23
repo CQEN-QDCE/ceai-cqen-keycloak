@@ -73,6 +73,23 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/bin/sh"
+                  - "-c"
+                  - |
+                    hurl --variable username=$(cat /etc/keycloak-secret/KC_BOOTSTRAP_ADMIN_USERNAME) \
+                         --variable password=$(cat /etc/keycloak-secret/KC_BOOTSTRAP_ADMIN_PASSWORD) \
+                         /opt/keycloak/data/import/deploy-realm.hurl
+          volumeMounts:
+            - name: keycloak-secret
+              mountPath: /etc/keycloak-secret
+              readOnly: true
+            - name: keycloak-realm-config
+              mountPath: /opt/keycloak/data/import
+              readOnly: true
           resources:
             limits:
               cpu: {{ .Values.keycloak.resources.limits.cpu }}
@@ -80,4 +97,11 @@ spec:
             requests:
               cpu: {{ .Values.keycloak.resources.requests.cpu }}
               memory: {{ .Values.keycloak.resources.requests.memory }}
+      volumes:
+        - name: keycloak-secret
+          secret:
+            secretName: keycloak-secret
+        - name: keycloak-realm-config
+          configMap:
+            name: keycloak-realm-config
 {{- end }}
