@@ -45,6 +45,11 @@ jobs:
             "$KEYCLOAK_URL/admin/realms/$REALM_NAME")
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
+      - name: Debug realm status
+        run: |
+          echo "Realm check status: ${{ steps.check-realm.outputs.status }}"
+          cat existing_realm.json | jq .
+
       # 3. Créer le realm si inexistant
       - name: Create realm if missing
         if: steps.check-realm.outputs.status == '404'
