@@ -2,6 +2,9 @@ name: Deploy Keycloak Realm (test)
 
 on:
   workflow_dispatch:  # Déclenchement manuel uniquement
+  pull_request:        # Déclenchement sur pull request
+    branches:
+      - feature/deployer_realm_keycloak
 
 jobs:
   deploy-realm:
