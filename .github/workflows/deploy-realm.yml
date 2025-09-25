@@ -61,7 +61,7 @@ jobs:
       - name: Create realm if missing
         if: steps.check-realm.outputs.status == '404'
         run: |
-          curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
+          curl -s -X POST "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
             -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
             -H "Content-Type: application/json" \
             --data-binary @realm-export.json
