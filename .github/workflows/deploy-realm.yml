@@ -36,6 +36,8 @@ jobs:
             -d "grant_type=password" | jq -r .access_token)
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
+          echo "Token: $TOKEN"
+
       # 2. Vérifier si le realm existe
       - name: Check if realm exists
         id: check-realm
