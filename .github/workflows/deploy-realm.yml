@@ -45,7 +45,6 @@ jobs:
             "$KEYCLOAK_URL/admin/realms/$REALM_NAME")
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
-
       - name: Debug realm status
         run: |
           echo "Realm check status: ${{ steps.check-realm.outputs.status }}"
