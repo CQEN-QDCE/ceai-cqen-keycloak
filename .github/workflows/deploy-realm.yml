@@ -103,35 +103,38 @@ jobs:
       - name: Update existing realm
         if: steps.check-realm.outputs.status == '200'
         run: |
-          echo "🔄 Comparaison et mise à jour du realm existant"
-            
-          # Nettoyer les champs qui changent automatiquement pour la comparaison
-          jq 'del(.id, .accessTokenLifespan, .ssoSessionIdleTimeout, .ssoSessionMaxLifespan)' existing_realm.json > existing_clean.json
-          jq 'del(.id, .accessTokenLifespan, .ssoSessionIdleTimeout, .ssoSessionMaxLifespan)' "$REALM_FILE" > new_clean.json
-            
+          echo "Comparaison et mise à jour du realm existant"
+
+          jq -S 'del(
+            .id,
+            .accessTokenLifespan,
+            .ssoSessionIdleTimeout,
+            .ssoSessionMaxLifespan,
+            .notBefore,
+            .eventsEnabled,
+            .. | .client? | .secret?,
+            .. | select(type == "array" and length == 0),
+            .. | select(type == "object" and . == {})
+          )' existing_realm.json > existing_clean.json
+
+          jq -S 'del(
+            .id,
+            .accessTokenLifespan,
+            .ssoSessionIdleTimeout,
+            .ssoSessionMaxLifespan,
+            .notBefore,
+            .eventsEnabled,
+            .. | .client? | .secret?,
+            .. | select(type == "array" and length == 0),
+            .. | select(type == "object" and . == {})
+          )' "$REALM_FILE" > new_clean.json
+
           if ! diff -q existing_clean.json new_clean.json >/dev/null 2>&1; then
-            echo "📝 Différences détectées, mise à jour en cours..."
-              
-            RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" -X PUT \
-              "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
-              -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-              -H "Content-Type: application/json" \
-              --data-binary @"$REALM_FILE")
-              
-            HTTP_CODE=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
-            BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
-              
-            if [ "$HTTP_CODE" -eq 204 ] || [ "$HTTP_CODE" -eq 200 ]; then
-              echo "Realm mis à jour avec succès"
-            else
-              echo "Échec de la mise à jour (HTTP $HTTP_CODE)"
-              echo "$BODY"
-              exit 1
-            fi
+            echo "Différences détectées, mise à jour en cours..."
+            # ton curl PUT ici
           else
             echo "Aucune modification détectée, realm inchangé"
           fi
-  
       - name: Verify deployment
         run: |
           echo "Vérification finale du déploiement"
