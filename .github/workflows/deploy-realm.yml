@@ -57,7 +57,7 @@ jobs:
           echo "Realm cible: $REALM_NAME"
 
 
-          
+
 
       # 1. Authentification
       - name: Get access token
@@ -102,7 +102,7 @@ jobs:
         run: |
           if ! diff <(jq -S . existing_realm.json) <(jq -S . realm-export.json) >/dev/null; then
             echo "Realm is different, updating..."
-            curl -s -X PUT "$KEYCLOAK_URL/admin/realms" \
+            curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
               -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               -H "Content-Type: application/json" \
               --data-binary @realm-export.json
