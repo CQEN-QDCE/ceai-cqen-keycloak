@@ -81,7 +81,7 @@ jobs:
       - name: Create new realm
         if: steps.check-realm.outputs.status == '404'
         run: |
-          echo "🆕 Création du nouveau realm: $REALM_NAME"
+          echo "Création du nouveau realm: $REALM_NAME"
             
           RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST \
             "$KEYCLOAK_URL/admin/realms" \
@@ -105,32 +105,10 @@ jobs:
         run: |
           echo "Comparaison et mise à jour du realm existant"
 
-          jq -S 'del(
-            .id,
-            .accessTokenLifespan,
-            .ssoSessionIdleTimeout,
-            .ssoSessionMaxLifespan,
-            .notBefore,
-            .eventsEnabled,
-            .. | .client? | .secret?,
-            .. | select(type == "array" and length == 0),
-            .. | select(type == "object" and . == {})
-          )' existing_realm.json > existing_clean.json
+          jq 'del(.id, .notBefore, .revokeRefreshToken, .refreshTokenMaxReuse, .accessTokenLifespan, .accessTokenLifespanForImplicitFlow, .ssoSessionIdleTimeout, .ssoSessionMaxLifespan, .offlineSessionIdleTimeout, .accessCodeLifespan, .accessCodeLifespanUserAction, .accessCodeLifespanLogin, .actionTokenGeneratedByAdminLifespan, .actionTokenGeneratedByUserLifespan, .oauth2DeviceCodeLifespan, .oauth2DevicePollingInterval)' existing_realm.json > existing_clean.json
+          
+          jq 'del(.id, .notBefore, .revokeRefreshToken, .refreshTokenMaxReuse, .accessTokenLifespan, .accessTokenLifespanForImplicitFlow, .ssoSessionIdleTimeout, .ssoSessionMaxLifespan, .offlineSessionIdleTimeout, .accessCodeLifespan, .accessCodeLifespanUserAction, .accessCodeLifespanLogin, .actionTokenGeneratedByAdminLifespan, .actionTokenGeneratedByUserLifespan, .oauth2DeviceCodeLifespan, .oauth2DevicePollingInterval)' "$REALM_FILE" > new_clean.json
 
-          jq -S 'del(
-            .id,
-            .accessTokenLifespan,
-            .ssoSessionIdleTimeout,
-            .ssoSessionMaxLifespan,
-            .notBefore,
-            .eventsEnabled,
-            .. | .client? | .secret?,
-            .. | select(type == "array" and length == 0),
-            .. | select(type == "object" and . == {})
-          )' "$REALM_FILE" > new_clean.json
-
-          echo "📄 Diff debug entre existing_clean.json et new_clean.json :"
-          diff -u existing_clean.json new_clean.json || true
 
           if ! diff -q existing_clean.json new_clean.json >/dev/null 2>&1; then
             echo "Différences détectées, mise à jour en cours..."
@@ -138,10 +116,11 @@ jobs:
             curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
                -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
                -H "Content-Type: application/json" \
-               --data-binary @realm-export.json
+               --data-binary @"$REALM_FILE"
           else
             echo "Aucune modification détectée, realm inchangé"
           fi
+
       - name: Verify deployment
         run: |
           echo "Vérification finale du déploiement"
