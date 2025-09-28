@@ -131,7 +131,11 @@ jobs:
 
           if ! diff -q existing_clean.json new_clean.json >/dev/null 2>&1; then
             echo "Différences détectées, mise à jour en cours..."
-            # ton curl PUT ici
+            
+            curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
+               -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+               -H "Content-Type: application/json" \
+               --data-binary @realm-export.json
           else
             echo "Aucune modification détectée, realm inchangé"
           fi
