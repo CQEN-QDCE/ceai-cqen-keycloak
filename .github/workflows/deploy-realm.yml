@@ -24,9 +24,6 @@ jobs:
       - name: Install jq and curl
         run: sudo apt-get update && sudo apt-get install -y jq curl
 
-
-
-
       - name: Valider le fichier JSON
         run: |
           if [ ! -f "$REALM_FILE" ]; then
@@ -48,7 +45,6 @@ jobs:
           echo "REALM_NAME=$REALM_NAME" >> $GITHUB_ENV
           echo "Realm validé: $REALM_NAME"
 
-
       - name: Extract realm name
         id: realm
         run: |
@@ -56,10 +52,6 @@ jobs:
           echo "name=$REALM_NAME" >> $GITHUB_OUTPUT
           echo "Realm cible: $REALM_NAME"
 
-
-
-
-      # 1. Authentification
       - name: Get access token
         id: get-token
         run: |
@@ -71,7 +63,6 @@ jobs:
             -d "grant_type=password" | jq -r .access_token)
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
           
-      # 2. Vérifier si le realm existe
       - name: Check if realm exists
         id: check-realm
         run: |
@@ -87,25 +78,98 @@ jobs:
             cat existing_realm.json | jq .
           fi
 
-      # 3. Créer le realm si inexistant
-      - name: Create realm if missing
+      - name: Create new realm
         if: steps.check-realm.outputs.status == '404'
         run: |
-          curl -s -X POST "$KEYCLOAK_URL/admin/realms" \
+          echo "🆕 Création du nouveau realm: $REALM_NAME"
+            
+          RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST \
+            "$KEYCLOAK_URL/admin/realms" \
             -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
             -H "Content-Type: application/json" \
-            --data-binary @realm-export.json
-
-      # 4. Mettre à jour si différent
-      - name: Update realm if modified
+            --data-binary @"$REALM_FILE")
+            
+          HTTP_CODE=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
+            
+          if [ "$HTTP_CODE" -eq 201 ] || [ "$HTTP_CODE" -eq 204 ]; then
+            echo "Realm créé avec succès"
+          else
+            echo "Échec de la création du realm (HTTP $HTTP_CODE)"
+            echo "$BODY"
+            exit 1
+          fi
+  
+      - name: Update existing realm
         if: steps.check-realm.outputs.status == '200'
         run: |
-          if ! diff <(jq -S . existing_realm.json) <(jq -S . realm-export.json) >/dev/null; then
-            echo "Realm is different, updating..."
-            curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
+          echo "🔄 Comparaison et mise à jour du realm existant"
+            
+          # Nettoyer les champs qui changent automatiquement pour la comparaison
+          jq 'del(.id, .accessTokenLifespan, .ssoSessionIdleTimeout, .ssoSessionMaxLifespan)' existing_realm.json > existing_clean.json
+          jq 'del(.id, .accessTokenLifespan, .ssoSessionIdleTimeout, .ssoSessionMaxLifespan)' "$REALM_FILE" > new_clean.json
+            
+          if ! diff -q existing_clean.json new_clean.json >/dev/null 2>&1; then
+            echo "📝 Différences détectées, mise à jour en cours..."
+              
+            RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" -X PUT \
+              "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
               -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               -H "Content-Type: application/json" \
-              --data-binary @realm-export.json
+              --data-binary @"$REALM_FILE")
+              
+            HTTP_CODE=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+            BODY=$(echo $RESPONSE | sed -e 's/HTTPSTATUS:.*//g')
+              
+            if [ "$HTTP_CODE" -eq 204 ] || [ "$HTTP_CODE" -eq 200 ]; then
+              echo "Realm mis à jour avec succès"
+            else
+              echo "Échec de la mise à jour (HTTP $HTTP_CODE)"
+              echo "$BODY"
+              exit 1
+            fi
           else
-            echo "Realm unchanged, nothing to do."
+            echo "Aucune modification détectée, realm inchangé"
           fi
+  
+      - name: Verify deployment
+        run: |
+          echo "Vérification finale du déploiement"
+            
+          STATUS=$(curl -s -w "%{http_code}" -o /dev/null \
+            -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+            "$KEYCLOAK_URL/admin/realms/$REALM_NAME")
+            
+          if [ "$STATUS" = "200" ]; then
+            echo "Déploiement vérifié avec succès"
+            echo "Realm '$REALM_NAME' est accessible"
+          else
+            echo "Échec de la vérification (HTTP $STATUS)"
+            exit 1
+          fi
+  
+      - name: Cleanup temporary files
+        if: always()
+        run: |
+          rm -f existing_realm.json existing_clean.json new_clean.json
+
+      # - name: Create realm if missing
+      #   if: steps.check-realm.outputs.status == '404'
+      #   run: |
+      #     curl -s -X POST "$KEYCLOAK_URL/admin/realms" \
+      #       -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+      #       -H "Content-Type: application/json" \
+      #       --data-binary @realm-export.json
+
+      # - name: Update realm if modified
+      #   if: steps.check-realm.outputs.status == '200'
+      #   run: |
+      #     if ! diff <(jq -S . existing_realm.json) <(jq -S . realm-export.json) >/dev/null; then
+      #       echo "Realm is different, updating..."
+      #       curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
+      #         -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+      #         -H "Content-Type: application/json" \
+      #         --data-binary @realm-export.json
+      #     else
+      #       echo "Realm unchanged, nothing to do."
+      #     fi
