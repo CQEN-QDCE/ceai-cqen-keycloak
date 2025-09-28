@@ -15,7 +15,7 @@ jobs:
       KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL_TEST }}
       USERNAME: ${{ secrets.KEYCLOAK_ADMIN_USERNAME_TEST }}
       PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD_TEST }}
-      REALM_NAME: ${{ secrets.KEYCLOAK_REALM_NAME_TEST }}
+      REALM_FILE: ${{ secrets.KEYCLOAK_REALM_NAME_TEST }}
 
     steps:
       - name: Checkout repository
@@ -23,6 +23,41 @@ jobs:
 
       - name: Install jq and curl
         run: sudo apt-get update && sudo apt-get install -y jq curl
+
+
+
+
+      - name: Valider le fichier JSON
+        run: |
+          if [ ! -f "$REALM_FILE" ]; then
+            echo "Fichier $REALM_FILE introuvable"
+            exit 1
+          fi
+          
+          if ! jq empty "$REALM_FILE"; then
+            echo "Fichier JSON invalide"
+            exit 1
+          fi
+          
+          REALM_NAME=$(jq -r '.realm // empty' "$REALM_FILE")
+          if [ -z "$REALM_NAME" ]; then
+            echo "Le champ 'realm' est manquant"
+            exit 1
+          fi
+          
+          echo "REALM_NAME=$REALM_NAME" >> $GITHUB_ENV
+          echo "Realm validé: $REALM_NAME"
+
+
+      - name: Extract realm name
+        id: realm
+        run: |
+          REALM_NAME=$(jq -r '.realm' "$REALM_FILE")
+          echo "name=$REALM_NAME" >> $GITHUB_OUTPUT
+          echo "Realm cible: $REALM_NAME"
+
+
+          
 
       # 1. Authentification
       - name: Get access token
