@@ -141,24 +141,3 @@ jobs:
         if: always()
         run: |
           rm -f existing_realm.json existing_clean.json new_clean.json
-
-      # - name: Create realm if missing
-      #   if: steps.check-realm.outputs.status == '404'
-      #   run: |
-      #     curl -s -X POST "$KEYCLOAK_URL/admin/realms" \
-      #       -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-      #       -H "Content-Type: application/json" \
-      #       --data-binary @realm-export.json
-
-      # - name: Update realm if modified
-      #   if: steps.check-realm.outputs.status == '200'
-      #   run: |
-      #     if ! diff <(jq -S . existing_realm.json) <(jq -S . realm-export.json) >/dev/null; then
-      #       echo "Realm is different, updating..."
-      #       curl -s -X PUT "$KEYCLOAK_URL/admin/realms/$REALM_NAME" \
-      #         -H "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-      #         -H "Content-Type: application/json" \
-      #         --data-binary @realm-export.json
-      #     else
-      #       echo "Realm unchanged, nothing to do."
-      #     fi
