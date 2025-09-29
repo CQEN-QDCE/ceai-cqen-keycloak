@@ -15,7 +15,7 @@ jobs:
       KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL_TEST }}
       USERNAME: ${{ secrets.KEYCLOAK_ADMIN_USERNAME_TEST }}
       PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD_TEST }}
-      REALM_FILE: realms/realm=export.json
+      REALM_FILE: realms/realm-export.json
         
 
     steps:
