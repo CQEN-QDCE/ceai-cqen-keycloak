@@ -1,0 +1,84 @@
+{
+    "id": "mon-realm-deploiement-id",
+    "realm": "mon-realm-deploiement",
+    "displayName": "Realm d'Intégration et de Tests CI",
+    "enabled": true,
+    "registrationAllowed": false,
+    "ssoSessionIdleTimeout": 3600,
+    "ssoSessionMaxLifespan": 7200,
+    "clientScopeRequired": false,
+    "eventsEnabled": false,
+    "adminEventsEnabled": false,
+    "users": [
+      {
+        "username": "ci-test-user",
+        "enabled": true,
+        "emailVerified": true,
+        "firstName": "CI",
+        "lastName": "User"
+      }
+    ],
+    "clients": [
+      {
+        "id": "mon-client-applicatif-id",
+        "clientId": "mon-client-applicatif",
+        "name": "Application Web Confidentielle",
+        "enabled": true,
+        "publicClient": false,
+        "bearerOnly": false,
+        "rootUrl": "http://localhost:8080",
+        "redirectUris": ["http://localhost:8080/*"],
+        "fullScopeAllowed": true,
+        "attributes": {
+          "post.logout.redirect.uris": "+",
+          "backchannel.logout.url": "",
+          "backchannel.logout.session.required": "true",
+          "oauth2.device.authorization.grant.allowed": "false"
+        }
+      },
+      {
+        "id": "api-service-client-id",
+        "clientId": "api-service-client",
+        "name": "Client pour Flux Client Credentials (API)",
+        "enabled": true,
+        "publicClient": false,
+        "serviceAccountsEnabled": true,
+        "authorizationServicesEnabled": false,
+        "secret": "123456789abcdefghijklmnopqrstuvwxyz", 
+        "fullScopeAllowed": true,
+        "protocolMappers": [
+          {
+            "name": "Client ID",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-usersessionmodel-note-mapper",
+            "consentRequired": false,
+            "config": {
+              "user.session.note": "clientId",
+              "access.token.claim": "true",
+              "claim.name": "client_id",
+              "jsonType.label": "String"
+            }
+          }
+        ]
+      }
+    ],
+    "clientScopes": [
+      {
+        "name": "email",
+        "protocol": "openid-connect",
+        "protocolMappers": [
+          {
+            "name": "email",
+            "protocol": "openid-connect",
+            "protocolMapper": "oidc-full-name-mapper",
+            "consentRequired": false,
+            "config": {
+              "id.token.claim": "true",
+              "access.token.claim": "true",
+              "userinfo.token.claim": "true"
+            }
+          }
+        ]
+      }
+    ]
+  }
