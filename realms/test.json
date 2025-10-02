@@ -1,6 +1,6 @@
 {
     "realm": "mon-realm-deploiement",
-    "displayName": "Realm d'Intégration et de Tests CI",
+    "displayName": "Realm d Intégration et de Tests CI",
     "enabled": true,
     "registrationAllowed": false,
     "ssoSessionIdleTimeout": 3600,
