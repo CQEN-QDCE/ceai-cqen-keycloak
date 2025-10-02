@@ -1,5 +1,4 @@
 {
-    "id": "mon-realm-deploiement-id",
     "realm": "mon-realm-deploiement",
     "displayName": "Realm d'Intégration et de Tests CI",
     "enabled": true,
@@ -15,12 +14,18 @@
         "enabled": true,
         "emailVerified": true,
         "firstName": "CI",
-        "lastName": "User"
+        "lastName": "User",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "MotDePasseFort123!",
+            "temporary": false
+          }
+        ]
       }
     ],
     "clients": [
       {
-        "id": "mon-client-applicatif-id",
         "clientId": "mon-client-applicatif",
         "name": "Application Web Confidentielle",
         "enabled": true,
@@ -37,14 +42,13 @@
         }
       },
       {
-        "id": "api-service-client-id",
         "clientId": "api-service-client",
         "name": "Client pour Flux Client Credentials (API)",
         "enabled": true,
         "publicClient": false,
         "serviceAccountsEnabled": true,
         "authorizationServicesEnabled": false,
-        "secret": "123456789abcdefghijklmnopqrstuvwxyz", 
+        "secret": "123456789abcdefghijklmnopqrstuvwxyz",
         "fullScopeAllowed": true,
         "protocolMappers": [
           {
@@ -70,7 +74,7 @@
           {
             "name": "email",
             "protocol": "openid-connect",
-            "protocolMapper": "oidc-full-name-mapper",
+            "protocolMapper": "oidc-email-mapper",
             "consentRequired": false,
             "config": {
               "id.token.claim": "true",
