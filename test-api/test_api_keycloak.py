@@ -12,6 +12,7 @@ KC_ADMIN_USER = os.environ.get('KC_ADMIN_USER')
 KC_ADMIN_PASSWORD = os.environ.get('KC_ADMIN_PASSWORD')
 KEYCLOAK_API_CLIENT_SECRET = os.environ.get('KEYCLOAK_API_CLIENT_SECRET')
 TARGET_REALM = os.environ.get('TARGET_REALM')
+global_access_token = None
 
 # Le jeton d'accès administrateur est stocké ici après l'authentification
 ADMIN_TOKEN = None
