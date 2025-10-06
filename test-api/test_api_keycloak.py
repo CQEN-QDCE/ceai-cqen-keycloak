@@ -106,6 +106,7 @@ def test_05_list_clients_via_admin_api():
     Vérifie l'accès à l'API Admin pour lister les clients du realm cible
     en utilisant le jeton du compte de service.
     """
+    global global_access_token
     
     # S'assurer que le jeton a été obtenu par le test précédent
     if not global_access_token:
