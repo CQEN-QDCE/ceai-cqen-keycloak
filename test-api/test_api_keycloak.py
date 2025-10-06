@@ -61,6 +61,39 @@ def admin_headers():
         'Content-Type': 'application/json'
     }
 
+def get_service_account_token():
+    """Tente d'obtenir un jeton d'accès pour le compte de service."""
+    token_url = f"{KEYCLOAK_URL}/realms/{TARGET_REALM}/protocol/openid-connect/token"
+
+    data = {
+        'client_id': 'api-service-client',
+        'client_secret': KEYCLOAK_API_CLIENT_SECRET,
+        'grant_type': 'client_credentials'
+    }
+
+    try:
+        response = requests.post(token_url, data=data, timeout=10)
+    except requests.exceptions.RequestException as e:
+        pytest.fail(f"Erreur de connexion lors de la requête de jeton: {e}")
+
+    # Si le statut n'est pas 200, nous renvoyons une erreur explicite
+    if response.status_code != 200:
+        pytest.fail(
+            f"Échec de l'obtention du jeton (401/403). Statut: {response.status_code}. "
+            f"Réponse: {response.text}"
+        )
+
+    # Si le statut est 200, nous vérifions le contenu
+    try:
+        response_json = response.json()
+    except json.JSONDecodeError:
+        pytest.fail(f"Réponse JSON invalide du serveur. Réponse: {response.text}")
+
+    if 'access_token' not in response_json:
+        pytest.fail("Le jeton d'accès est manquant dans la réponse JSON.")
+    
+    return response_json['access_token']
+
 # --- Scénarios de Test (Étape 5) ---
 
 def test_01_keycloak_is_reachable():
