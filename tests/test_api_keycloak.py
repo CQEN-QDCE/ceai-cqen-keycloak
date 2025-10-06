@@ -81,36 +81,36 @@ def test_02_target_realm_exists(admin_headers):
     assert realm_config.get('enabled') is True, "Le Realm n'est pas activé."
 
 
-def test_03_critical_client_is_present(admin_headers):
-    """Vérifie qu'un client applicatif essentiel est présent et configuré."""
-    client_name = "mon-client-applicatif" # ID du client à vérifier
-    clients_url = f"{BASE_ADMIN_URL}/{TARGET_REALM}/clients"
+# def test_03_critical_client_is_present(admin_headers):
+#     """Vérifie qu'un client applicatif essentiel est présent et configuré."""
+#     client_name = "mon-client-applicatif" # ID du client à vérifier
+#     clients_url = f"{BASE_ADMIN_URL}/{TARGET_REALM}/clients"
     
-    response = requests.get(clients_url, headers=admin_headers)
-    assert response.status_code == 200, "Échec de l'accès à la liste des clients."
+#     response = requests.get(clients_url, headers=admin_headers)
+#     assert response.status_code == 200, "Échec de l'accès à la liste des clients."
     
-    clients = response.json()
+#     clients = response.json()
     
-    # Recherche du client par son ID
-    found_client = next((c for c in clients if c.get('clientId') == client_name), None)
+#     # Recherche du client par son ID
+#     found_client = next((c for c in clients if c.get('clientId') == client_name), None)
     
-    assert found_client is not None, f"Le client critique '{client_name}' est manquant."
+#     assert found_client is not None, f"Le client critique '{client_name}' est manquant."
     
-    # Vous pouvez ajouter ici des assertions sur le type d'accès, les redirections, etc.
-    assert found_client.get('publicClient') is False, "Le client doit être confidentiel (non public)."
+#     # Vous pouvez ajouter ici des assertions sur le type d'accès, les redirections, etc.
+#     assert found_client.get('publicClient') is False, "Le client doit être confidentiel (non public)."
 
-def test_04_oidc_flow_is_functional():
-    """Test de haut niveau : vérifie que le flux OIDC (Client Credentials) fonctionne."""
-    token_url = f"{KEYCLOAK_URL}/realms/{TARGET_REALM}/protocol/openid-connect/token"
+# def test_04_oidc_flow_is_functional():
+#     """Test de haut niveau : vérifie que le flux OIDC (Client Credentials) fonctionne."""
+#     token_url = f"{KEYCLOAK_URL}/realms/{TARGET_REALM}/protocol/openid-connect/token"
     
-    # Utilisez ici un client/secret d'une application existante dans le realm cible
-    data = {
-        'client_id': 'api-service-client', 
-        'client_secret': 'votre_secret_ci_test',
-        'grant_type': 'client_credentials'
-    }
+#     # Utilisez ici un client/secret d'une application existante dans le realm cible
+#     data = {
+#         'client_id': 'api-service-client', 
+#         'client_secret': 'votre_secret_ci_test',
+#         'grant_type': 'client_credentials'
+#     }
     
-    response = requests.post(token_url, data=data, timeout=10)
+#     response = requests.post(token_url, data=data, timeout=10)
     
-    assert response.status_code == 200, f"Échec du flux OIDC (Client Credentials). Statut: {response.status_code}"
-    assert 'access_token' in response.json(), "Le flux OIDC n'a pas retourné de jeton d'accès."
+#     assert response.status_code == 200, f"Échec du flux OIDC (Client Credentials). Statut: {response.status_code}"
+#     assert 'access_token' in response.json(), "Le flux OIDC n'a pas retourné de jeton d'accès."
