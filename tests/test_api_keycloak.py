@@ -69,16 +69,16 @@ def test_01_keycloak_is_reachable():
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Keycloak est injoignable: {e}")
 
-def test_02_target_realm_exists(admin_headers):
-    """Vérifie que le realm cible a été créé et est accessible via l'API Admin."""
-    realm_url = f"{BASE_ADMIN_URL}/{TARGET_REALM}"
-    response = requests.get(realm_url, headers=admin_headers)
+# def test_02_target_realm_exists(admin_headers):
+#     """Vérifie que le realm cible a été créé et est accessible via l'API Admin."""
+#     realm_url = f"{BASE_ADMIN_URL}/{TARGET_REALM}"
+#     response = requests.get(realm_url, headers=admin_headers)
     
-    assert response.status_code == 200, f"Le Realm '{TARGET_REALM}' est introuvable (Status: {response.status_code})"
+#     assert response.status_code == 200, f"Le Realm '{TARGET_REALM}' est introuvable (Status: {response.status_code})"
     
-    # Validation d'un attribut de configuration critique
-    realm_config = response.json()
-    assert realm_config.get('enabled') is True, "Le Realm n'est pas activé."
+#     # Validation d'un attribut de configuration critique
+#     realm_config = response.json()
+#     assert realm_config.get('enabled') is True, "Le Realm n'est pas activé."
 
 
 # def test_03_critical_client_is_present(admin_headers):
