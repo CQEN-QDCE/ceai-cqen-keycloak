@@ -106,7 +106,7 @@ def test_04_oidc_flow_is_functional():
     # Utilisez ici un client/secret d'une application existante dans le realm cible
     data = {
         'client_id': 'api-service-client', 
-        'client_secret': 'abf3KdSWyg4RzDPFXOD6XdXNbNZgNmzA',
+        'client_secret': 'CMLevgBfSxp0PdVpG1WEWgMgQSupJwai',
         'grant_type': 'client_credentials'
     }
     
