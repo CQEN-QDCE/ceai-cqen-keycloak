@@ -182,19 +182,3 @@ def test_05_list_clients_via_admin_api():
 
     for client_id in expected_clients:
         assert client_id in client_ids, f"Le client essentiel '{client_id}' n'a pas été trouvé."
-
-# def test_04_oidc_flow_is_functional():
-#     """Test de haut niveau : vérifie que le flux OIDC (Client Credentials) fonctionne."""
-#     token_url = f"{KEYCLOAK_URL}/realms/{TARGET_REALM}/protocol/openid-connect/token"
-    
-#     # Utilisez ici un client/secret d'une application existante dans le realm cible
-#     data = {
-#         'client_id': 'api-service-client', 
-#         'client_secret': KEYCLOAK_API_CLIENT_SECRET,
-#         'grant_type': 'client_credentials'
-#     }
-    
-#     response = requests.post(token_url, data=data, timeout=10)
-    
-#     assert response.status_code == 200, f"Échec du flux OIDC (Client Credentials). Statut: {response.status_code}"
-#     assert 'access_token' in response.json(), "Le flux OIDC n'a pas retourné de jeton d'accès."
