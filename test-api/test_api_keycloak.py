@@ -10,6 +10,7 @@ import pytest
 KEYCLOAK_URL = os.environ.get('KEYCLOAK_URL')
 KC_ADMIN_USER = os.environ.get('KC_ADMIN_USER')
 KC_ADMIN_PASSWORD = os.environ.get('KC_ADMIN_PASSWORD')
+KEYCLOAK_API_CLIENT_SECRET = os.environ.get('KEYCLOAK_API_CLIENT_SECRET')
 TARGET_REALM = os.environ.get('TARGET_REALM')
 
 # Le jeton d'accès administrateur est stocké ici après l'authentification
@@ -106,7 +107,7 @@ def test_04_oidc_flow_is_functional():
     # Utilisez ici un client/secret d'une application existante dans le realm cible
     data = {
         'client_id': 'api-service-client', 
-        'client_secret': 'CMLevgBfSxp0PdVpG1WEWgMgQSupJwai',
+        'client_secret': KEYCLOAK_API_CLIENT_SECRET,
         'grant_type': 'client_credentials'
     }
     

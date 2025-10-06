@@ -18,6 +18,7 @@ jobs:
       KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL_TEST }}
       KC_ADMIN_USER: ${{ secrets.KEYCLOAK_ADMIN_USERNAME_TEST }}
       KC_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD_TEST }}
+      KEYCLOAK_API_CLIENT_SECRET: ${{secrets.KEYCLOAK_API_CLIENT_SECRET}}
       # Nom du realm déployé que l'on souhaite tester
       TARGET_REALM: 'mon-realm-deploiement' 
 
