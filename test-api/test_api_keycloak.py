@@ -100,18 +100,56 @@ def test_03_critical_client_is_present(admin_headers):
     # Vous pouvez ajouter ici des assertions sur le type d'accès, les redirections, etc.
     assert found_client.get('publicClient') is False, "Le client doit être confidentiel (non public)."
 
-def test_04_oidc_flow_is_functional():
-    """Test de haut niveau : vérifie que le flux OIDC (Client Credentials) fonctionne."""
-    token_url = f"{KEYCLOAK_URL}/realms/{TARGET_REALM}/protocol/openid-connect/token"
+def test_05_list_clients_via_admin_api():
+    """
+    Vérifie l'accès à l'API Admin pour lister les clients du realm cible
+    en utilisant le jeton du compte de service.
+    """
     
-    # Utilisez ici un client/secret d'une application existante dans le realm cible
-    data = {
-        'client_id': 'api-service-client', 
-        'client_secret': KEYCLOAK_API_CLIENT_SECRET,
-        'grant_type': 'client_credentials'
+    # S'assurer que le jeton a été obtenu par le test précédent
+    if not global_access_token:
+        pytest.fail("Le jeton d'accès (global_access_token) est manquant. test_04 a-t-il échoué ?")
+
+    # Endpoint de l'API Admin pour lister les clients
+    clients_url = f"{KEYCLOAK_URL}/admin/realms/{TARGET_REALM}/clients"
+    
+    headers = {
+        'Authorization': f'Bearer {global_access_token}',
+        'Content-Type': 'application/json'
     }
+
+    response = requests.get(clients_url, headers=headers, timeout=10)
+
+    # 1. Vérification du statut (doit être 200)
+    # Si vous obtenez 403 Forbidden ici, cela signifie que le rôle 'view-clients' est manquant.
+    assert response.status_code == 200, f"Échec de l'accès à l'API Admin pour lister les clients. Statut: {response.status_code}. Réponse: {response.text}"
+
+    clients_list = response.json()
     
-    response = requests.post(token_url, data=data, timeout=10)
+    # 2. Vérification que la liste n'est pas vide (un realm a toujours des clients par défaut)
+    assert isinstance(clients_list, list), "La réponse n'est pas une liste de clients."
+    assert len(clients_list) > 0, "La liste des clients est vide (ce qui est inattendu)."
+
+    # 3. Vérification que le client testé est présent
+    client_ids = [client['clientId'] for client in clients_list]
+    expected_clients = ['api-service-client', 'mon-client-applicatif'] # Ajoutez ici d'autres clients importants
+
+    for client_id in expected_clients:
+        assert client_id in client_ids, f"Le client '{client_id}' n'a pas été trouvé dans la liste des clients."
+
+
+# def test_04_oidc_flow_is_functional():
+#     """Test de haut niveau : vérifie que le flux OIDC (Client Credentials) fonctionne."""
+#     token_url = f"{KEYCLOAK_URL}/realms/{TARGET_REALM}/protocol/openid-connect/token"
     
-    assert response.status_code == 200, f"Échec du flux OIDC (Client Credentials). Statut: {response.status_code}"
-    assert 'access_token' in response.json(), "Le flux OIDC n'a pas retourné de jeton d'accès."
+#     # Utilisez ici un client/secret d'une application existante dans le realm cible
+#     data = {
+#         'client_id': 'api-service-client', 
+#         'client_secret': KEYCLOAK_API_CLIENT_SECRET,
+#         'grant_type': 'client_credentials'
+#     }
+    
+#     response = requests.post(token_url, data=data, timeout=10)
+    
+#     assert response.status_code == 200, f"Échec du flux OIDC (Client Credentials). Statut: {response.status_code}"
+#     assert 'access_token' in response.json(), "Le flux OIDC n'a pas retourné de jeton d'accès."
