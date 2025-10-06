@@ -38,5 +38,5 @@ jobs:
 
       - name: Exécuter les tests du Realm Keycloak
         # On exécute pytest sur le répertoire contenant nos tests
-        run: pytest tests/
+        run: pytest test-api/
         working-directory: .
