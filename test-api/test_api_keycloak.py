@@ -103,42 +103,40 @@ def test_03_critical_client_is_present(admin_headers):
 
 def test_05_list_clients_via_admin_api():
     """
-    Vérifie l'accès à l'API Admin pour lister les clients du realm cible
-    en utilisant le jeton du compte de service.
+    Test 05 exécute sa propre logique pour obtenir le jeton et tester l'API Admin.
     """
-    global global_access_token
-    
-    # S'assurer que le jeton a été obtenu par le test précédent
-    if not global_access_token:
-        pytest.fail("Le jeton d'accès (global_access_token) est manquant. test_04 a-t-il échoué ?")
+    # Étape 1 : Obtenir le jeton de manière indépendante
+    access_token = get_service_account_token()
 
-    # Endpoint de l'API Admin pour lister les clients
+    # Étape 2 : Appeler l'API Admin
     clients_url = f"{KEYCLOAK_URL}/admin/realms/{TARGET_REALM}/clients"
     
     headers = {
-        'Authorization': f'Bearer {global_access_token}',
+        'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
     }
 
     response = requests.get(clients_url, headers=headers, timeout=10)
 
-    # 1. Vérification du statut (doit être 200)
-    # Si vous obtenez 403 Forbidden ici, cela signifie que le rôle 'view-clients' est manquant.
-    assert response.status_code == 200, f"Échec de l'accès à l'API Admin pour lister les clients. Statut: {response.status_code}. Réponse: {response.text}"
+    # 1. Vérification du statut : 200 OK
+    # Si le test échoue ici avec 403 Forbidden, le rôle 'view-clients' est manquant !
+    assert response.status_code == 200, (
+        f"Échec de l'accès à l'API Admin (Rôles ou URL incorrects). Statut: {response.status_code}. "
+        f"Réponse: {response.text}"
+    )
 
     clients_list = response.json()
     
-    # 2. Vérification que la liste n'est pas vide (un realm a toujours des clients par défaut)
+    # 2. Vérification du contenu
     assert isinstance(clients_list, list), "La réponse n'est pas une liste de clients."
-    assert len(clients_list) > 0, "La liste des clients est vide (ce qui est inattendu)."
+    assert len(clients_list) > 0, "La liste des clients est vide (inattendu)."
 
-    # 3. Vérification que le client testé est présent
+    # 3. Vérification que le client testé est présent (facultatif mais recommandé)
     client_ids = [client['clientId'] for client in clients_list]
-    expected_clients = ['api-service-client', 'mon-client-applicatif'] # Ajoutez ici d'autres clients importants
+    expected_clients = ['api-service-client', 'realm-management', 'account'] 
 
     for client_id in expected_clients:
-        assert client_id in client_ids, f"Le client '{client_id}' n'a pas été trouvé dans la liste des clients."
-
+        assert client_id in client_ids, f"Le client essentiel '{client_id}' n'a pas été trouvé."
 
 # def test_04_oidc_flow_is_functional():
 #     """Test de haut niveau : vérifie que le flux OIDC (Client Credentials) fonctionne."""
