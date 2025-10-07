@@ -34,6 +34,16 @@ jobs:
           # Installation du framework de test et de la librairie HTTP
           pip install pytest requests
 
+      - name: Déploiement du Realm test
+        uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms  # Chemin vers votre action
+        with:
+          # Fichier de configuration spécifique à Staging
+          realm-file: realms/septembre.json
+          # URL spécifique à l'environnement de test
+          keycloak_url: ${{ secrets.KEYCLOAK_URL }}
+          keycloak_username: ${{ env.KC_ADMIN_USER }}
+          keycloak_password: ${{ env.KC_ADMIN_PASSWORD }}
+
       - name: Exécuter les tests du Realm Keycloak
         run: pytest test-api/
         working-directory: .
