@@ -12,7 +12,6 @@ KC_ADMIN_USER = os.environ.get('KC_ADMIN_USER')
 KC_ADMIN_PASSWORD = os.environ.get('KC_ADMIN_PASSWORD')
 KEYCLOAK_API_CLIENT_SECRET = os.environ.get('KEYCLOAK_API_CLIENT_SECRET')
 TARGET_REALM = os.environ.get('TARGET_REALM')
-global_access_token = None
 
 # Le jeton d'accès administrateur est stocké ici après l'authentification
 ADMIN_TOKEN = None
@@ -38,7 +37,7 @@ def get_admin_token():
     
     try:
         response = requests.post(token_url, data=data, timeout=10)
-        response.raise_for_status() # Lève une exception si le statut est une erreur HTTP
+        response.raise_for_status() 
         
         token_data = response.json()
         ADMIN_TOKEN = token_data.get('access_token')
@@ -134,19 +133,8 @@ def test_03_critical_client_is_present(admin_headers):
     # Vous pouvez ajouter ici des assertions sur le type d'accès, les redirections, etc.
     assert found_client.get('publicClient') is False, "Le client doit être confidentiel (non public)."
 
-def test_04_oidc_flow_is_functional():
-    """
-    Test 04 devient un test simple de l'utilitaire d'obtention de jeton.
-    Il ne stocke plus la variable globale.
-    """
-    access_token = get_service_account_token()
-    
-    # Vérifie juste que le jeton est une chaîne non vide
-    assert isinstance(access_token, str)
-    assert len(access_token) > 0
 
-
-def test_05_list_clients_via_admin_api():
+def test_04_list_clients_via_admin_api():
     """
     Test 05 exécute sa propre logique pour obtenir le jeton et tester l'API Admin.
     """
