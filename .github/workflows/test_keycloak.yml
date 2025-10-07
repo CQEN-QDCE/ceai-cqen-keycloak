@@ -41,7 +41,7 @@ jobs:
         uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms  # Chemin vers votre action
         with:
           # Fichier de configuration spécifique à Staging
-          realm-file: realms/septembre.json
+          realm-file: realms/
           # URL spécifique à l'environnement de test
           keycloak_url: ${{ secrets.KEYCLOAK_URL }}
           keycloak_username: ${{ env.KC_ADMIN_USER }}

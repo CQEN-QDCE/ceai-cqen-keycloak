@@ -136,7 +136,7 @@ def test_03_critical_client_is_present(admin_headers):
 
 def test_04_list_clients_via_admin_api():
     """
-    Test 05 exécute sa propre logique pour obtenir le jeton et tester l'API Admin.
+    Test 04 exécute sa propre logique pour obtenir le jeton et tester l'API Admin.
     """
     # Étape 1 : Obtenir le jeton de manière indépendante
     access_token = get_service_account_token()
