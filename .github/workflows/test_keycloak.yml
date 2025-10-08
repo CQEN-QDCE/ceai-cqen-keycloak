@@ -50,15 +50,15 @@ jobs:
             # S'assurer que le fichier spécifique a bien les droits
             chmod 644 ${{env.REALM_TO_DEPLOY}}
 
-    #   - name: Déploiement du Realm test
-    #     uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms  # Chemin vers votre action
-    #     with:
-    #       # Fichier de configuration spécifique à Staging
-    #       realm-file: ${{env.REALM_TO_DEPLOY}}
-    #       # URL spécifique à l'environnement de test
-    #       keycloak_url: ${{ env.KEYCLOAK_URL }}
-    #       keycloak_username: ${{ env.KC_ADMIN_USER }}
-    #       keycloak_password: ${{ env.KC_ADMIN_PASSWORD }}
+      - name: Déploiement du Realm test
+        uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms  # Chemin vers votre action
+        with:
+          # Fichier de configuration spécifique à Staging
+          realm-file: ${{env.REALM_TO_DEPLOY}}
+          # URL spécifique à l'environnement de test
+          keycloak_url: ${{ env.KEYCLOAK_URL }}
+          keycloak_username: ${{ env.KC_ADMIN_USER }}
+          keycloak_password: ${{ env.KC_ADMIN_PASSWORD }}
 
       - name: Exécuter les tests du Realm Keycloak
         run: pytest test-api/
