@@ -38,24 +38,10 @@ jobs:
           # Installation du framework de test et de la librairie HTTP
           pip install pytest requests
 
-      - name: Debug - Afficher les fichiers
-        run: |
-            pwd # Affiche le répertoire de travail actuel
-            ls -R realms # Liste récursive du contenu du dossier realms
-
-      - name: Assurer les permissions de lecture pour le Realm 
-        run: |
-            # Change les permissions pour que le propriétaire et le groupe puissent lire/écrire, et les autres puissent lire
-            chmod -R 755 realms
-            # S'assurer que le fichier spécifique a bien les droits
-            chmod 644 ${{env.REALM_TO_DEPLOY}}
-
       - name: Déploiement du Realm test
-        uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms  # Chemin vers votre action
+        uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms
         with:
-          # Fichier de configuration spécifique à Staging
           realm-file: ${{env.REALM_TO_DEPLOY}}
-          # URL spécifique à l'environnement de test
           keycloak_url: ${{ env.KEYCLOAK_URL }}
           keycloak_username: ${{ env.KC_ADMIN_USER }}
           keycloak_password: ${{ env.KC_ADMIN_PASSWORD }}
