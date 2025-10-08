@@ -38,10 +38,10 @@ jobs:
           # Installation du framework de test et de la librairie HTTP
           pip install pytest requests
 
-    #   - name: Debug - Afficher les fichiers
-    #     run: |
-    #         pwd # Affiche le répertoire de travail actuel
-    #         ls -R realms # Liste récursive du contenu du dossier realms
+      - name: Debug - Afficher les fichiers
+        run: |
+            pwd # Affiche le répertoire de travail actuel
+            ls -R realms # Liste récursive du contenu du dossier realms
 
     #   - name: Assurer les permissions de lecture pour le Realm 
     #     run: |
