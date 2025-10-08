@@ -5,6 +5,10 @@ on:
   pull_request:        # Déclenchement sur pull request
     branches:
       - main
+
+  schedule:
+    - cron: '0 10 * * *'   # Tous les jours à 6h00 (heure du Québec)
+
 permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read    # This is required for actions/checkout
