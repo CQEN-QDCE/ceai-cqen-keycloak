@@ -26,6 +26,5 @@ jobs:
           keycloak_username: ${{ secrets.KEYCLOAK_ADMIN_USERNAME_TEST }}
           keycloak_password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD_TEST }}
           keycloak_api_client_secret: ${{ secrets.KEYCLOAK_API_CLIENT_SECRET }}
-          keycloak_api_client_secret: ${{env.KEYCLOAK_API_CLIENT_SECRET}}
           realm_to_deploy: realms/test-deploiement.json
           target_realm: mon-realm-deploiement
