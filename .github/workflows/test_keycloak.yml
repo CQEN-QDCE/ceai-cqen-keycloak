@@ -49,6 +49,7 @@ jobs:
           keycloak_url: ${{ env.KEYCLOAK_URL }}
           keycloak_username: ${{ env.KC_ADMIN_USER }}
           keycloak_password: ${{ env.KC_ADMIN_PASSWORD }}
+          keycloak_api_client_secret: ${{env.KEYCLOAK_API_CLIENT_SECRET}}
 
       - name: Exécuter les tests du Realm Keycloak
         run: pytest test-api/
