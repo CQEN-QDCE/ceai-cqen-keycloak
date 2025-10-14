@@ -30,7 +30,7 @@ jobs:
       - name: Télécharger le Realm depuis S3
         run: |
           mkdir -p realms
-          aws s3 cp s3://x-road-preprod-logs/realms/test-deploiement.json realms/test-deploiement.json
+          aws s3 cp s3://cqen-dev-logs/realms/test-deploiement.json realms/test-deploiement.json
           echo "✅ Fichier du realm téléchargé depuis S3 : realms/test-deploiement.json"
 
       - name: Valider et tester le Realm Keycloak
