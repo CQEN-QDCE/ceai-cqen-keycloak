@@ -19,6 +19,13 @@ jobs:
     environment: test
 
     steps:
+
+      - name: Télécharger le Realm depuis S3
+        run: |
+          mkdir -p realms
+          aws s3 cp s3://${REALM_S3_BUCKET}/${REALM_S3_KEY} realms/test-deploiement.json
+          echo "✅ Fichier du realm téléchargé depuis S3 : realms/test-deploiement.json"
+
       - name: Valider et tester le Realm Keycloak
         uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/validate-realm@feature/deployer_realms
         with:
@@ -26,5 +33,5 @@ jobs:
           keycloak_username: ${{ secrets.KEYCLOAK_ADMIN_USERNAME_TEST }}
           keycloak_password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD_TEST }}
           keycloak_api_client_secret: ${{ secrets.KEYCLOAK_API_CLIENT_SECRET }}
-          realm_to_deploy: s3://cqen-preprod-logs/realms/test-deploiement.json
+          realm_to_deploy: realms/test-deploiement.json
           target_realm: mon-realm-deploiement
