@@ -23,7 +23,7 @@ jobs:
       - name: "configure aws credentials"
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.ARN_ASSUME_ROLE2 }}
+          role-to-assume: ${{ secrets.ASSUME_ROLE_ARN }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.CLUSTER_NAME }}
 
