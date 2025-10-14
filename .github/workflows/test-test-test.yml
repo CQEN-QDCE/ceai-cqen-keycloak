@@ -25,7 +25,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ASSUME_ROLE_ARN }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.CLUSTER_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Télécharger le Realm depuis S3
         run: |
