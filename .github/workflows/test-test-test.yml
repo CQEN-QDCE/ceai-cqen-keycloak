@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p $GITHUB_WORKSPACE/../realms
           aws s3 cp s3://cqen-dev-logs/realms/test.json $GITHUB_WORKSPACE/../realms/test.json
-          echo "✅ Fichier téléchargé : $GITHUB_WORKSPACE/../realms/test-deploiement.json"
+          echo "Fichier téléchargé : $GITHUB_WORKSPACE/../realms/test-deploiement.json"
           ls -l $GITHUB_WORKSPACE/../realms
 
       - name: Valider et tester le Realm Keycloak
