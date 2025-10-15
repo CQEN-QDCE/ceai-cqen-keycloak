@@ -29,7 +29,7 @@ jobs:
 
       - name: Télécharger le Realm depuis S3
         env:
-          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}   # Bucket venant des secrets
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}   # Bucket venant des secrets contenant /realms/test.json
         run: |
           mkdir -p $GITHUB_WORKSPACE/../realms
           aws s3 cp s3://$S3_BUCKET/realms/test.json $GITHUB_WORKSPACE/../realms/test.json
