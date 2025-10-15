@@ -37,12 +37,11 @@ jobs:
           ls -l $GITHUB_WORKSPACE/../realms
 
       # Étape 2 — Exécuter le composite en pointant vers le fichier externe
-      - name: Valider et tester le Realm Keycloak
+      - name: Deployer le Realm Keycloak
         uses: MCN-CQEN/ceai-cqen-scripts-lib/actions/keycloak-actions/deploy-realm@feature/deployer_realms
         with:
           keycloak_url: ${{ secrets.KEYCLOAK_URL_TEST }}
           keycloak_username: ${{ secrets.KEYCLOAK_ADMIN_USERNAME_TEST }}
           keycloak_password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD_TEST }}
-          keycloak_api_client_secret: ${{ secrets.KEYCLOAK_API_CLIENT_SECRET }}
           # On référence le fichier à l’extérieur du dossier du dépôt
           realm-file: ../realms/test.json
