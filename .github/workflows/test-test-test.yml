@@ -1,9 +1,10 @@
-name: Validation quotidienne du Realm Keycloak
+name: Validation quotidienne du Realm Keycloakkkkkkk
 
 on:
   workflow_dispatch:  
   pull_request:       
     branches:
+
       - main
   schedule:
     - cron: '0 10 * * *'   # Tous les jours à 6h00 (heure du Québec)
