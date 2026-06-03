@@ -1,5 +1,5 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION=26.3.1
+ARG IMG_VERSION=26.6.2
 ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
@@ -48,7 +48,7 @@ COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/tar
 WORKDIR /opt/keycloak
 
 # Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
-RUN /opt/keycloak/bin/kc.sh build --health-enabled=true --metrics-enabled=true --features=token-exchange
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true --metrics-enabled=true --features=token-exchange,opentelemetry-logs
 
 # Étape finale de création de l'image Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} AS keycloak
