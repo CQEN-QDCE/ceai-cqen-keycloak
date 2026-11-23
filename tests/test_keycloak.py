@@ -7,8 +7,8 @@ BASE_URL = os.getenv('KEYCLOAK_TEST_URL', 'http://localhost:8080').rstrip('/')
 REALM_NAME = 'master'
 REALM_NAME_IMPORT = 'ceai'
 REALM_NAME_PASSWORD = 'ceai'
-USERNAME = 'admin'
-PASSWORD = 'cqen'
+USERNAME = os.getenv('KC_BOOTSTRAP_ADMIN_USERNAME', 'admin')
+PASSWORD = os.getenv('KC_BOOTSTRAP_ADMIN_PASSWORD')
 EXPECTED_LOGIN_THEME = 'cqen'
 EXPECTED_EMAIL_THEME = 'cqen'
 EXPECTED_ACCOUNT_THEME = 'cqen'
@@ -16,6 +16,8 @@ ADMIN_CLIENT_ID = 'admin-cli'
 
 
 def get_admin_token(base_url, realm_name, client_id, username, password):
+    if not password:
+        raise RuntimeError('KC_BOOTSTRAP_ADMIN_PASSWORD must be set to run the integration tests')
     url = f'{base_url}/realms/{realm_name}/protocol/openid-connect/token'
     payload = {
         'client_id': client_id,

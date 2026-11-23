@@ -14,23 +14,28 @@ jobs:
 
     - name: Create .env file
       run: |
+        umask 077
+        postgres_password=$(openssl rand -hex 32)
+        keycloak_password=$(openssl rand -hex 32)
+        printf '::add-mask::%s\n' "$postgres_password" "$keycloak_password"
         echo "SERVER_OPTIONS__HOSTNAME=smtp4dev" >> .env
         echo "POSTGRES_DB=keycloak" >> .env
         echo "POSTGRES_USER=keycloak" >> .env
-        echo "POSTGRES_PASSWORD=local-test-db" >> .env
+        echo "POSTGRES_PASSWORD=$postgres_password" >> .env
         echo "KC_BOOTSTRAP_ADMIN_USERNAME=admin" >> .env
-        echo "KC_BOOTSTRAP_ADMIN_PASSWORD=cqen" >> .env
+        echo "KC_BOOTSTRAP_ADMIN_PASSWORD=$keycloak_password" >> .env
         echo "KC_DB=postgres" >> .env
         echo "KC_DB_URL=jdbc:postgresql://postgres/keycloak" >> .env
         echo "KC_HOSTNAME=localhost" >> .env
         echo "KC_DB_USERNAME=keycloak" >> .env
-        echo "KC_DB_PASSWORD=local-test-db" >> .env
+        echo "KC_DB_PASSWORD=$postgres_password" >> .env
         echo "KC_HTTP_RELATIVE_PATH=/" >> .env
         echo "KC_METRICS_ENABLED=true" >> .env
         echo "KC_HEALTH_ENABLED=true" >> .env
         echo "KC_PROXY_HEADERS=forwarded" >> .env
         echo "KC_HTTP_MANAGEMENT_PORT=9000" >> .env
         echo "ENV=dev" >> .env
+        printf 'KC_BOOTSTRAP_ADMIN_PASSWORD=%s\n' "$keycloak_password" >> "$GITHUB_ENV"
 
     - name: Set up Python
       uses: actions/setup-python@v5
