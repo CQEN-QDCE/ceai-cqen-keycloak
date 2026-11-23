@@ -54,6 +54,9 @@ while true; do
 done
 
 # Exécuter les tests
+KC_BOOTSTRAP_ADMIN_USERNAME=$(docker-compose --env-file .env -f "$DOCKER_COMPOSE_FILE" exec -T keycloak printenv KC_BOOTSTRAP_ADMIN_USERNAME) || exit 1
+KC_BOOTSTRAP_ADMIN_PASSWORD=$(docker-compose --env-file .env -f "$DOCKER_COMPOSE_FILE" exec -T keycloak printenv KC_BOOTSTRAP_ADMIN_PASSWORD) || exit 1
+export KC_BOOTSTRAP_ADMIN_USERNAME KC_BOOTSTRAP_ADMIN_PASSWORD
 run_command python3 tests/test_keycloak.py
 
 # Arrêter et supprimer les conteneurs Docker

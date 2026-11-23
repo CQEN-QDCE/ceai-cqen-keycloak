@@ -1,37 +1,35 @@
-version: '3'
-
 services:
   smtp4dev:
     image: rnwood/smtp4dev:v3
     restart: always
     ports:
-      # Change the number before : to the port the web interface should be accessible on
-      - '3000:80'
-      # Change the number before : to the port the SMTP server should be accessible on
-      - '25:25'
-      # Change the number before : to the port the IMAP server should be accessible on
-      - '143:143'
+      - '127.0.0.1:3000:80'
+      - '127.0.0.1:25:25'
+      - '127.0.0.1:143:143'
     environment:
       #Specifies the server hostname. Used in auto-generated TLS certificate if enabled.
       - ServerOptions__HostName=${SERVER_OPTIONS__HOSTNAME}
   postgres:
-    image: postgres:13
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-        - 5432:5432 
+      - '127.0.0.1:5432:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 2s
+      timeout: 3s
+      retries: 20
 
   keycloak:
       build:
         context: .
-        # Spécifier la version de l'image keycloak 
-        # Ce valeur peut changer pour des tests par exemple
-        # Mais, normalement, ça devrait être au minimum in sync avec la version dans le fichier version-to-deploy.json
+        # Le Dockerfile définit la version par défaut.
         args:
-          - IMG_VERSION=${IMG_VERSION}
+          - IMG_VERSION
           - ENV=${ENV}
       environment:
         KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
@@ -42,7 +40,7 @@ services:
         KC_HTTP_RELATIVE_PATH: ${KC_HTTP_RELATIVE_PATH}
         KC_DB_USERNAME: ${KC_DB_USERNAME}
         KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-        KC_FEATURES: ${KC_FEATURES}
+        KC_FEATURES:
         ENV: ${ENV}
         KC_METRICS_ENABLED: ${KC_METRICS_ENABLED}
         KC_HEALTH_ENABLED: ${KC_HEALTH_ENABLED}
@@ -51,10 +49,12 @@ services:
 
 
       ports:
-        - 9000:9000
-        - 8080:8080
+        - '127.0.0.1:9000:9000'
+        - '127.0.0.1:8080:8080'
       depends_on:
-        - smtp4dev
-        - postgres
+        smtp4dev:
+          condition: service_started
+        postgres:
+          condition: service_healthy
       volumes:
         - ./customization/themes/cqen/:/opt/keycloak/themes/cqen/
