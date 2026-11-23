@@ -12,49 +12,42 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up Docker environment
-      uses: docker/setup-buildx-action@v1
-
-    - name: Install Docker Compose
-      run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-
     - name: Create .env file
       run: |
+        umask 077
+        postgres_password=$(openssl rand -hex 32)
+        keycloak_password=$(openssl rand -hex 32)
+        printf '::add-mask::%s\n' "$postgres_password" "$keycloak_password"
         echo "SERVER_OPTIONS__HOSTNAME=smtp4dev" >> .env
         echo "POSTGRES_DB=keycloak" >> .env
-        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-        echo "KC_BOOTSTRAP_ADMIN_USERNAME=${{ secrets.KEYCLOAK_ADMIN }}" >> .env
-        echo "KC_BOOTSTRAP_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" >> .env
+        echo "POSTGRES_USER=keycloak" >> .env
+        echo "POSTGRES_PASSWORD=$postgres_password" >> .env
+        echo "KC_BOOTSTRAP_ADMIN_USERNAME=admin" >> .env
+        echo "KC_BOOTSTRAP_ADMIN_PASSWORD=$keycloak_password" >> .env
         echo "KC_DB=postgres" >> .env
         echo "KC_DB_URL=jdbc:postgresql://postgres/keycloak" >> .env
         echo "KC_HOSTNAME=localhost" >> .env
-        echo "KC_DB_USERNAME=${{ secrets.KC_DB_USERNAME }}" >> .env
-        echo "KC_DB_PASSWORD=${{ secrets.KC_DB_PASSWORD }}" >> .env
-        echo "KC_FEATURES=hostname:v2" >> .env
+        echo "KC_DB_USERNAME=keycloak" >> .env
+        echo "KC_DB_PASSWORD=$postgres_password" >> .env
         echo "KC_HTTP_RELATIVE_PATH=/" >> .env
         echo "KC_METRICS_ENABLED=true" >> .env
         echo "KC_HEALTH_ENABLED=true" >> .env
         echo "KC_PROXY_HEADERS=forwarded" >> .env
         echo "KC_HTTP_MANAGEMENT_PORT=9000" >> .env
-        echo "IMG_VERSION=25.0.6" >> .env
         echo "ENV=dev" >> .env
+        printf 'KC_BOOTSTRAP_ADMIN_PASSWORD=%s\n' "$keycloak_password" >> "$GITHUB_ENV"
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8'  
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
         pip install requests pytest  
 
     - name: Build and run the script
-      run: |
-        chmod +x ./build_keycloak.sh
-        ./build_keycloak.sh
+      run: bash build_keycloak.sh
 
     - name: Run tests
-      run: python3 tests/test_keycloak.py
+      run: python -m pytest tests/test_keycloak.py

@@ -1,5 +1,5 @@
 # Définition de la version de Keycloak à utiliser comme argument pour être réutilisable dans le Dockerfile
-ARG IMG_VERSION=26.6.2
+ARG IMG_VERSION=26.8.2
 ARG ENV=upgrade
 
 # Utilisation de Red Hat Universal Base Image 9 comme image de base pour le pré-build
@@ -12,7 +12,7 @@ RUN dnf install --installroot /mnt/rootfs util-linux curl-minimal --releasever 9
     rpm --root /mnt/rootfs -e --nodeps setup
 
 # Construction des modules de Keycloak
-FROM docker.io/maven:3-amazoncorretto-17 AS providers-builder
+FROM docker.io/maven:3-amazoncorretto-21 AS providers-builder
 
 COPY ./providers ./providers
 
@@ -48,7 +48,7 @@ COPY --from=providers-builder --chown=1000 providers/2fa-email-authenticator/tar
 WORKDIR /opt/keycloak
 
 # Construction du serveur Keycloak avec les configurations et providers précédemment ajoutés
-RUN /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true --metrics-enabled=true
 
 # Étape finale de création de l'image Keycloak
 FROM quay.io/keycloak/keycloak:${IMG_VERSION} AS keycloak

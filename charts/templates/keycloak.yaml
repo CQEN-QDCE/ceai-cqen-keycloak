@@ -58,8 +58,6 @@ spec:
               value: "true"
             - name: KC_METRICS_ENABLED
               value: "true"
-            - name: KC_FEATURES
-              value: "token-exchange"
             - name: KC_HEALTH_ENABLED
               value: "true"
             - name: KC_PROXY_HEADERS
